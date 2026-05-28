@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        <span class="logo">Global Fresh News</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="/">View Site</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="login-container">
+    <h2>Create Admin</h2>
+
+    <form action="/admin/register" method="POST" class="register-form">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <button type="submit">Create Admin</button>
+    </form>
+
+    <a href="/login">Back to Login</a>
+</div>
+</div>
+
+
+</body>
+</html>

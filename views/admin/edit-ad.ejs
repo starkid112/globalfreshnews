@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+<div class="admin-container">
+
+<h2>Edit Ad</h2>
+
+<form action="/admin/ads/edit/<%= ad._id %>" method="POST">
+
+  <input type="text" name="title" value="<%= ad.title %>" required><br><br>
+
+  <select name="position">
+    <option value="header" <%= ad.position === "header" ? "selected" : "" %>>Header</option>
+    <option value="sidebar" <%= ad.position === "sidebar" ? "selected" : "" %>>Sidebar</option>
+    <option value="footer" <%= ad.position === "footer" ? "selected" : "" %>>Footer</option>
+  </select><br><br>
+
+  <textarea name="code" rows="6"><%= ad.code %></textarea><br><br>
+
+  <button type="submit">Update Ad</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

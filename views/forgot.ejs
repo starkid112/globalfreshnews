@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/category/Global">Global</a>
+            <a href="/category/Politics">Politics</a>
+            <a href="/category/Health">Health</a>
+            <a href="/category/Markets">Markets</a>
+            <a href="/category/Tech">Tech</a>
+            <a href="/category/Entertainment">Entertainment</a>
+            <a href="/category/Business">Business</a>
+        </div>
+    </div>
+
+    <div class="nav-right">
+        <a href="/logout">Logout</a>
+    </div>
+
+</nav>
+
+<!-- ✅ PAGE HEADER -->
+<div class="page-header">
+    <h1>Forget Password</h1>
+<div class="form-box">
+    <p>Keep your account secure by updating your password</p>
+</div>
+
+<!-- ✅ FORM CONTAINER -->
+<div class="login-container">
+    <h2>Forgot Password</h2>
+
+    <!-- ✅ SUCCESS / ERROR MESSAGE -->
+    <% if (typeof req !== "undefined" && req.query.success) { %>
+        <p style="color:green;">✅ Reset link sent to your email</p>
+    <% } %>
+
+    <% if (typeof req !== "undefined" && req.query.error) { %>
+        <p style="color:red;">❌ No account found or error occurred</p>
+    <% } %>
+
+    <form method="POST" action="/forgot-password">
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="submit">Send Reset Link</button>
+    </form>
+
+    <a href="/login" class="back-btn">⬅ Back to Login</a>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+     <div class="footer-content">
+        <!--SITE NAME-->
+        <h2><%= setting.siteName || "Global Fresh News" %></h2>
+     </div>    
+    <div class="footer-links">
+        <a href="/about">About</a>
+        <a href="/page/privacy">Privacy Policy</a>
+        <a href="/page/terms">Terms of Use</a>
+        <a href="/contact">Contact</a>
+    </div>
+
+    <div class="translate-box">
+        <div id="google_translate_element"></div>
+    </div>     
+
+    <!-- ✅ COPYRIGHT -->
+        <p>
+          © <%= new Date().getFullYear() %> 
+          <%= setting.siteName || "Global Fresh News" %>. 
+          All rights reserved.
+        </p>
+
+    <div class="socials">
+        <a href="https://www.facebook.com/share/1CX81bifeY/?mibextid=wwXIfr">Facebook</a>
+        <a href="https://x.com/globalfreshnews?s=11">Twitter</a>
+        <a href="https://www.instagram.com/globalfreshnews?igsh=dXR6ajc4N21la2Rn&utm_source=qr">Instagram</a>
+        <a href="https://www.tiktok.com/@global_fresh_news?_r=1&_t=ZS-95NFCLdC7jV">TikTok</a>
+        <a href="https://youtube.com/@globalfreshnews12?si=wKU70G0Aa44x7U7n">Youtube</a>
+    </div>
+</footer>
+
+
+</body>
+</html>

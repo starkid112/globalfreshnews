@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+
+<h1>Latest Posts</h1>
+
+<% posts.forEach(post => { %>
+    <div>
+        <h2><a href="/post/<%= post.slug %>"><%= post.title %></a></h2>
+        <p><%= post.content.substring(0, 100) %>...</p>
+    </div>
+<% }) %>
+
+<!-- 📄 PAGINATION -->
+<div>
+    <% if (currentPage > 1) { %>
+        <a href="/?page=<%= currentPage - 1 %>">⬅ Prev</a>
+    <% } %>
+
+    <span> Page <%= currentPage %> of <%= totalPages %> </span>
+
+    <% if (currentPage < totalPages) { %>
+        <a href="/?page=<%= currentPage + 1 %>">Next ➡</a>
+    <% } %>
+</div>
+
+</body>
+</html>

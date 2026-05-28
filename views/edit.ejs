@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ✅ CKEditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="page-header">
+    <h1>Edit Post</h1>
+</div>
+
+<div class="container">
+<div class="form-box">
+
+<form action="/edit/<%= post._id %>" method="POST" enctype="multipart/form-data">
+
+<!-- TITLE -->
+<label>Post Title</label>
+<input type="text" name="title" id="title" value="<%= post.title %>" required>
+
+<!-- SLUG -->
+<label>Slug</label>
+<input type="text" name="slug" id="slug" value="<%= post.slug %>" required>
+
+<!-- AUTHOR -->
+<label>Author</label>
+<input type="text" name="author" value="<%= post.author %>" required>
+
+<!-- META DESCRIPTION -->
+<label>Meta Description (SEO)</label>
+<textarea name="metaDescription"><%= post.metaDescription || "" %></textarea>
+
+<label>SEO Keywords</label>
+<input type="text" name="keywords" value="<%= post.keywords || '' %>">
+
+<!-- CATEGORY -->
+<label>Category</label>
+<select name="category" required>
+<option value="Global" <%= post.category === "Global" ? "selected" : "" %>>Global</option>
+<option value="Politics" <%= post.category === "Politics" ? "selected" : "" %>>Politics</option>
+<option value="Health" <%= post.category === "Health" ? "selected" : "" %>>Health</option>
+<option value="Tech" <%= post.category === "Tech" ? "selected" : "" %>>Tech</option>
+<option value="Business" <%= post.category === "Business" ? "selected" : "" %>>Business</option>
+<option value="Markets" <%= post.category === "Markets" ? "selected" : "" %>>Markets</option>
+<option value="Education" <%= post.category === "Education" ? "selected" : "" %>>Education</option>
+<option value="Lifestyle" <%= post.category === "Lifestyle" ? "selected" : "" %>>Lifestyle</option>
+<option value="Sports" <%= post.category === "Sports" ? "selected" : "" %>>Sports</option>
+<option value="Entertainment" <%= post.category === "Entertainment" ? "selected" : "" %>>Entertainment</option>
+</select>
+
+ <!-- SUBCATEGORY -->
+<label>Sports Subcategory (optional)</label>
+
+<select name="subCategory">
+  <option value="">Select (only for Sports)</option>
+
+  <option value="Football" <%= post.subCategory === 'Football' ? 'selected' : '' %>>Football</option>
+  <option value="Tennis" <%= post.subCategory === 'Tennis' ? 'selected' : '' %>>Tennis</option>
+  <option value="Basketball" <%= post.subCategory === 'Basketball' ? 'selected' : '' %>>Basketball</option>
+  <option value="Golf" <%= post.subCategory === 'Golf' ? 'selected' : '' %>>Golf</option>
+  <option value="Boxing" <%= post.subCategory === 'Boxing' ? 'selected' : '' %>>Boxing</option>
+  <option value="Cricket" <%= post.subCategory === 'Cricket' ? 'selected' : '' %>>Cricket</option>
+  <option value="Rugby" <%= post.subCategory === 'Rugby' ? 'selected' : '' %>>Rugby</option>
+  <option value="Baseball" <%= post.subCategory === 'Baseball' ? 'selected' : '' %>>Baseball</option>
+  <option value="Hockey" <%= post.subCategory === 'Hockey' ? 'selected' : '' %>>Hockey</option>
+  <option value="Olympics" <%= post.subCategory === 'Olympics' ? 'selected' : '' %>>Olympics</option>
+  <option value="Motorsport" <%= post.subCategory === 'Motorsport' ? 'selected' : '' %>>Motorsport</option>
+</select>  
+
+
+<!-- IMAGE -->
+<label>Upload Image</label>
+<input type="file" name="image">
+
+<% if (post.image) { %>
+  <img src="/uploads/<%= post.image %>" style="width:150px;">
+<% } %>
+
+<img id="preview" style="max-width:100%; margin-top:10px; display:none;">
+
+<!-- ALT TEXT -->
+<label>Image Alt Text (SEO)</label>
+<input type="text" name="altText" value="<%= post.altText || '' %>">
+
+<!-- IMAGE CAPTION -->
+<label>Image Caption (Visible)</label>
+<input type="text" name="caption" value="<%= post.caption || '' %>">
+
+<!-- CONTENT -->
+<label>Content</label>
+<textarea name="content" id="editor" rows="8" required><%= post.content %></textarea>
+
+<label>Feature Type</label>
+<select name="featureType">
+  <option value="none" <%= post.featureType === "none" ? "selected" : "" %>>None</option>
+  <option value="big" <%= post.featureType === "big" ? "selected" : "" %>>Big Feature</option>
+  <option value="small" <%= post.featureType === "small" ? "selected" : "" %>>Small Feature</option>
+</select>
+
+<label>
+  <input type="checkbox" name="isBreaking" <%= post.isBreaking ? "checked" : "" %>>
+  Mark as Breaking News
+</label>
+
+<div style="margin-top:10px;">
+  <label>
+    <input
+      type="checkbox" name="sponsored" <%= post.sponsored ? "checked" : "" %>> Sponsored Post
+  </label>
+</div>
+
+<div style="margin-top:10px;">
+  <label>
+     Pin Until
+  </label>
+  <input 
+  type="date" 
+  name="pinnedUntil"
+  value="<%= post.pinnedUntil ? new Date(post.pinnedUntil).toISOString().split('T')[0] : '' %>"
+>
+</div>
+
+<!-- SUBMIT -->
+<button type="submit">Update Post</button>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- 🔥 AUTO SLUG SCRIPT -->
+<script>
+document.getElementById("title").addEventListener("input", function() {
+    let slug = this.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9 ]/g, "")
+        .replace(/\s+/g, "-");
+
+    document.getElementById("slug").value = slug;
+});
+</script>
+
+<script>
+ClassicEditor
+  .create(document.querySelector("#editor"))
+  .catch(error => console.error(error));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+      <a href="/">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+      </a>  
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+<div class="admin-container">
+
+<h2>Site Settings</h2>
+
+<form action="/admin/settings" method="POST" enctype="multipart/form-data"> 
+
+  <input type="text" name="siteName" placeholder="Site Name"
+    value="<%= setting.siteName %>"><br><br>
+
+  <label>Logo Width</label>
+
+<input type="range" 
+       name="logoWidth" 
+       min="50" 
+       max="300" 
+       value="<%= setting.logoWidth ? parseInt(setting.logoWidth) : 120 %>" 
+       oninput="updateWidth(this.value)">
+
+<span id="widthValue">
+  <%= setting.logoWidth || '120px' %>
+</span>
+
+  <select name="logoPosition">
+    <option value="left">Left</option>
+    <option value="center">Center</option>
+    <option value="right">Right</option>
+  </select>
+
+  <input type="file" name="logo" onchange="previewLogo(event)">
+  <img id="logoPreview" 
+     src="/uploads/<%= setting.logo || 'logo.png' %>" 
+     style="width:120px; margin-top:10px;">
+
+  <input type="text" name="themeColor" placeholder="Theme Color"
+    value="<%= setting.themeColor %>"><br><br>
+
+  <textarea name="footerText" placeholder="Footer text"><%= setting.footerText %></textarea><br><br>
+
+  <button type="submit">Save</button>
+
+</form>
+
+</div>
+
+<script>
+function previewLogo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const preview = document.getElementById("logoPreview");
+  preview.src = URL.createObjectURL(file);
+}
+</script>
+
+<script>
+function updateWidth(value) {
+  document.getElementById("widthValue").innerText = value + "px";
+
+  const logo = document.getElementById("logoPreview");
+  if (logo) {
+    logo.style.width = value + "px";
+  }
+}
+</script>
+
+</body>
+</html>

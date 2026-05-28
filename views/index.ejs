@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+
+    <meta name="description" content="Latest global news, sports, tech and entertainment">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>  
+  <!-- DISCOVER BAR -->
+<div class="discover-wrapper">
+    <button class="discover-toggle" onclick="toggleDiscover()">
+    ▲
+    </button>
+
+    <div class="discover-track">
+        <span>Discover more</span>
+        <a href="/search?q=Politics">Politics</a>
+        <a href="/search?q=Lifestyle">Lifestyle</a>
+        <a href="/search?q=Sports">Sports</a>
+        <a href="/search?q=Technology">Technology</a>
+        <a href="/search?q=Education">Education</a>
+        <a href="/search?q=Business">Business</a>
+        <a href="/search?q=Health">Health</a>
+        <a href="/search?q=Markets">Markets</a>
+        <a href="/search?q=Entertainment">Entertainment</a>
+    </div>
+</div>
+
+<!-- TOP INFO BAR -->
+<div class="top-bar">
+    <!-- LEFT -->
+    <div class="top-left">
+        <a href="/contact">Advertise with us</a>
+    </div>
+
+    <!-- CENTER -->
+    <div class="top-center" id="liveDateTime">
+        Loading...
+    </div>
+</div>
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+
+    <!-- MENU BUTTON -->
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <!-- SIDE MENU -->
+    <div class="side-menu" id="sideMenu">
+
+        <div class="menu-header">
+            <h2><%= setting.siteName || "Global Fresh News" %></h2>
+            <button class="close-btn" onclick="closeMenu()">✖</button>
+        </div>
+
+        <a href="/">Home</a>
+        <a href="/category/Global">Global</a>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Markets">Markets</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Entertainment">Entertainment</a>
+        <a href="/category/Business">Business</a>
+        <a href="/category/Lifestyle">Lifestyle</a>
+        <a href="/category/Education">Education</a>
+
+        <a href="/sports/Football">Football</a>
+        <a href="/sports/Tennis">Tennis</a>
+        <a href="/sports/Basketball">Basketball</a>
+        <a href="/sports/Golf">Golf</a>
+        <a href="/sports/Boxing">Boxing</a>
+        <a href="/sports/Cricket">Cricket</a>
+        <a href="/sports/Rugby">Rugby</a>
+        <a href="/sports/Baseball">Baseball</a>
+        <a href="/sports/Hockey">Hockey</a>
+        <a href="/sports/Olympics">Olympics</a>
+        <a href="/sports/Motosport">Motosport</a>
+    </div>
+
+    <!-- LEFT SIDE -->
+    <div class="nav-left">
+        <a href="/">
+            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        </a>
+
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/category/Global">Global</a>
+            <a href="/category/Politics">Politics</a>
+            <a href="/category/Health">Health</a>
+           <a href="/category/Markets">Markets</a>
+            <a href="/category/Tech">Tech</a>
+            <a href="/category/Entertainment">Entertainment</a>
+            <a href="/category/Business">Business</a>
+            <a href="/category/Lifestyle">Lifestyle</a>
+            <a href="/category/Education">Education</a>
+
+            <!-- SPORTS DROPDOWN -->
+            <div class="dropdown">
+                <a href="#">Sports ▾</a>
+                <div class="dropdown-menu">
+                    <a href="/sports/Football">Football</a>
+                    <a href="/sports/Tennis">Tennis</a>
+                    <a href="/sports/Basketball">Basketball</a>
+                    <a href="/sports/Golf">Golf</a>
+                    <a href="/sports/Boxing">Boxing</a>
+                    <a href="/sports/Cricket">Cricket</a>
+                    <a href="/sports/Rugby">Rugby</a>
+                    <a href="/sports/Baseball">Baseball</a>
+                    <a href="/sports/Hockey">Hockey</a>
+                    <a href="/sports/Olympics">Olympics</a>
+                    <a href="/sports/Motosport">Motosport</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-right">
+        <form action="/search" method="GET" class="search-box">
+            <input type="text" name="q" placeholder="Search news..." required>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
+    <!-- DARK MODE -->
+    <button onclick="toggleDark()" class="dark-btn">🌙</button>
+
+</nav>
+
+<!-- LIVE MARKET TICKER UNDER NAVBAR -->
+<div class="market-widget">
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+  </div>
+</div>
+
+<!-- prettier-ignore -->
+<script type="text/javascript"
+src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
+async>
+{
+  "symbols": [
+    { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin" },
+    { "proName": "BINANCE:ETHUSDT", "title": "Ethereum" },
+    { "proName": "BINANCE:SOLUSDT", "title": "Solana" },
+    { "proName": "BINANCE:BNBUSDT", "title": "BNB" },
+
+    { "proName": "FOREXCOM:XAUUSD", "title": "Gold" },
+    { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+    { "proName": "FOREXCOM:NSXUSD", "title": "US 100" },
+    { "proName": "FX:EURUSD", "title": "EUR/USD" },
+    { "proName": "FX:GBPUSD", "title": "GBP/USD" },
+    { "proName": "FX_IDC:USDNGN", "title": "USD/NGN" },
+    { "proName": "NASDAQ:AAPL", "title": "Apple" },
+    { "proName": "NASDAQ:TSLA", "title": "Tesla" },
+    { "proName": "NASDAQ:NVDA", "title": "NVIDIA" }
+  ],
+  "showSymbolLogo": true,
+  "isTransparent": false,
+  "displayMode": "adaptive",
+  "colorTheme": "dark",
+  "locale": "en"
+}
+</script>
+
+<!-- 🔴 BREAKING NEWS -->
+<% if (breaking && breaking.length > 0) { %>
+<div class="breaking-bar">
+    <span class="label">BREAKING</span>
+
+    <div class="ticker">
+        <div class="ticker-content">
+
+            <% breaking.concat(breaking).forEach(post => { %>
+                <span>
+                    <a href="/post/<%= post.slug %>"><%= post.title %></a>
+                </span>
+            <% }) %>
+
+        </div>
+    </div>
+</div>
+<% } %>
+
+
+<!-- HEADER ADS -->
+<% if (ads && ads.header) { %>
+  <% ads.header.forEach(ad => { %>
+    <div class="ad ad-header">
+      <%- ad.code %>
+    </div>
+  <% }) %>
+<% } %>
+
+
+<!-- ================= MAIN LAYOUT ================= -->
+<div class="container">
+<div class="layout">   
+
+    <!-- ================= MAIN ================= -->
+    <div class="main">
+
+        <!-- FEATURED SECTION -->
+        <div class="featured-wrapper">
+
+            <!-- BIG SLIDER -->
+            <div class="hero-slider">
+                <% if (bigFeatures && bigFeatures.length > 0) { %>
+                    <% bigFeatures.forEach((post, index) => { %>
+                        <div class="slide <%= index === 0 ? 'active' : '' %>">
+                            <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+                            <div class="hero-text">
+                                <h2>
+                                    <a href="/post/<%= post.slug %>"><%= post.title %></a>
+                                </h2>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+
+            <!-- SMALL FEATURES -->
+            <div class="featured-side">
+                <% if (smallFeatures && smallFeatures.length > 0) { %>
+                    <% smallFeatures.forEach(post => { %>
+                        <a href="/post/<%= post.slug %>" class="card-link">
+                            <div class="small-card">
+                                <img src="/uploads/<%= post.image || 'default.jpg' %>">
+                                <h4><%= post.title %></h4>
+                            </div>
+                        </a>
+                    <% }) %>
+                <% } %>
+            </div>
+
+        </div>
+
+        <hr>
+
+<!-- CATEGORY + POSTS -->
+<% if (categoryPosts) { %>
+  <% Object.keys(categoryPosts).forEach(cat => { %>
+
+    <h2 class="section-title"><%= cat %></h2>
+
+    <!-- BIG POSTS (FIRST 2) -->
+    <div class="big-list">
+      <% categoryPosts[cat].slice(0,2).forEach(post => { %>
+        <a href="/post/<%= post.slug %>" class="big-card">
+          <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+          <div class="card-content">
+
+            <% if(post.sponsored) { %>
+                <div class="sponsored-tag">SPONSORED</div>
+            <% } %>
+
+            <h3><%= post.title %></h3>
+            <small>
+               <%= post.category %>
+               <% if(post.subCategory){ %>
+                   / <%= post.subCategory %>
+               <% } %>
+            </small>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+
+    <!-- SMALL POSTS (NEXT 4) -->
+    <div class="small-list">
+      <% categoryPosts[cat].slice(2,6).forEach(post => { %>
+        <a href="/post/<%= post.slug %>" class="small-row">
+          <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+          <div class="small-text">
+            <h4><%= post.title %></h4>
+            <small>
+                <%= post.category %>
+                <% if(post.subCategory){ %>
+                   / <%= post.subCategory %>
+                <% } %>
+            </small>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+
+    <a href="/category/<%= cat %>" class="view-more">View More →</a>
+    <hr>
+
+  <% }) %>
+<% } %>
+
+<!-- SPONSORED STORIES -->
+<% if (sponsoredPosts && sponsoredPosts.length > 0) { %>
+<div class="sponsored-section">
+    <h2 class="section-title">
+        Sponsored Content
+    </h2>
+    <div class="sponsored-grid">
+        <% sponsoredPosts.forEach(post => { %>
+            <a href="/post/<%= post.slug %>" class="sponsored-card">
+                <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+                <div class="sponsored-content">
+                    <span class="sponsored-badge">
+                        SPONSORED
+                    </span>
+                    <% if(post.isPinned) { %>
+                       <span class="pin-badge">Pinned</span>
+                    <% } %>
+
+                    <h3><%= post.title %></h3>
+
+                    <div class="sponsored-stats">
+                        <span>👁 <%= post.views || 0 %></span>
+                        <span>❤️ <%= post.likes || 0 %></span>
+                    </div>
+                    <p>
+                        <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 100) %>
+                    </p>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+</div>
+<% } %>
+<a href="/sponsored" class="view-more">
+   View More →
+</a>
+<hr>
+
+<!-- LATEST -->
+<h1 id="latest" class="title">Latest News</h1>
+
+<div id="posts-container">
+<div class="posts">
+<% posts.forEach(post => { %>
+
+    <a href="/post/<%= post.slug %>" class="card-link">
+        <div class="card">
+
+            <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+            <div class="card-content">
+
+                <h3><%= post.title %></h3>
+
+                <p>
+                  <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 120) %>
+                </p>
+
+                <p>
+                    👁 <%= post.views || 0 %> |
+                    ❤️ <%= post.likes || 0 %>
+                </p>
+
+                <small>
+                    <%= post.category %>
+                    <% if(post.subCategory){ %>
+                       / <%= post.subCategory %>
+                    <% } %>
+                    | <%= new Date(post.createdAt).toDateString() %>
+                </small>
+
+            </div>
+
+        </div>
+    </a>
+
+<% }) %>
+</div>
+
+<!-- PAGINATION -->
+<div class="pagination">
+    <% if (currentPage > 1) { %>
+        <a href="/?page=<%= currentPage - 1 %>#latest">⬅ Prev</a>
+    <% } %>
+
+    <span> Page <%= currentPage %> / <%= totalPages %> </span>
+
+    <% if (currentPage < totalPages) { %>
+        <a href="/?page=<%= currentPage + 1 %>#latest">Next ➡</a>
+    <% } %>
+</div>
+</div>
+
+</div> <!-- END MAIN -->
+
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <!-- TRENDING -->
+    <div class="widget">
+        <h3>Trending</h3>
+        <% trending.forEach(t => { %>
+            <div class="trending-item">
+                <img src="/uploads/<%= t.image || 'default.jpg' %>" class="trending-img">
+                <a href="/post/<%= t.slug %>">
+                    <%= t.title %>
+                </a>
+            </div>
+        <% }) %>
+    </div>
+
+    <!-- SIDEBAR ADS -->
+    <div class="widget ad-box">
+        <h3>Advertisement</h3>
+        <% if (ads && ads.sidebar) { %>
+            <% ads.sidebar.forEach(ad => { %>
+                <div class="ad ad-sidebar">
+                    <%- ad.code %>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="widget">
+        <h3>Categories</h3>
+        <p><a href="/category/Global">Global</a></p>
+        <p><a href="/category/Tech">Tech</a></p>
+        <p><a href="/category/Politics">Politics</a></p>
+        <p><a href="/category/Health">Health</a></p>
+        <p><a href="/category/Entertainment">Entertainment</a></p>
+        <p><a href="/category/Sports">Sports</a></p>
+        <p><a href="/category/Business">Business</a></p>
+        <p><a href="/category/Lifestyle">Lifestyle</a></p>
+        <p><a href="/category/Education">Education</a></p>
+        <p><a href="/category/Markets">Markets</a></p>
+    </div>
+
+    <!-- LIVE MARKETS -->
+    <div class="widget">
+        <h3>Live Markets</h3>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+
+            <!-- prettier-ignore -->
+            <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+            async>
+            {
+              "colorTheme": "dark",
+              "dateRange": "1D",
+              "showChart": true,
+              "locale": "en",
+              "largeChartUrl": "",
+              "isTransparent": false,
+              "showSymbolLogo": true,
+              "width": "100%",
+              "height": "350",
+              "tabs": [
+                {
+                  "title": "Crypto",
+                  "symbols": [
+                    { "s": "BINANCE:BTCUSDT", "d": "Bitcoin" },
+                    { "s": "BINANCE:ETHUSDT", "d": "Ethereum" },
+                    { "s": "BINANCE:SOLUSDT", "d": "Solana" },
+                    { "s": "BINANCE:BNBUSDT", "d": "BNB" }
+                  ]
+                },
+                {
+                  "title": "Forex",
+                  "symbols": [
+                    { "s": "FX_IDC:USDNGN", "d": "USD/NGN" },
+                    { "s": "FX:EURUSD", "d": "EUR/USD" },
+                    { "s": "FX:GBPUSD", "d": "GBP/USD" },
+                    { "s": "TVC:GOLD", "d": "XAU/USD" }
+                  ]
+                },
+                {
+                  "title": "Stocks",
+                  "symbols": [
+                    { "s": "NASDAQ:AAPL", "d": "Apple" },
+                    { "s": "NASDAQ:TSLA", "d": "Tesla" },
+                    { "s": "NASDAQ:NVDA", "d": "NVIDIA" }
+                  ]
+                }
+              ]
+            }
+            </script>
+        </div>
+    </div>
+
+    <!-- LATEST UPDATE -->
+  <div class="widget latest-widget">
+    <div class="latest-header">
+        ↑ LATEST UPDATE
+    </div>
+    <div class="latest-list">
+        <% breaking.forEach(post => { %>
+            <div class="latest-item">
+                <a href="/post/<%= post.slug %>">
+                    <%= post.title %>
+                </a>
+                <small>
+                 🕒 <%= timeAgo(post.createdAt) %>
+                </small>
+            </div>
+        <% }) %>
+    </div>
+  </div>
+</div>
+
+
+<!-- FOOTER ADS -->
+<% if (ads && ads.footer) { %>
+  <% ads.footer.forEach(ad => { %>
+    <div class="ad ad-footer">
+      <%- ad.code %>
+    </div>
+  <% }) %>
+<% } %>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+     <div class="footer-content">
+        <!--SITE NAME-->
+        <h2><%= setting.siteName || "Global Fresh News" %></h2>
+     </div> 
+
+    <div>
+      <h3>Company</h3>
+      <a href="/about">About Us</a>
+      <a href="/page/terms">Terms of Use</a>
+      <a href="/contact">Contact Us</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+
+    <div>
+      <h3>Specialist</h3>
+      <a href="/markets">Markets</a>
+    </div>
+
+     <div>
+      <img src="/images/logo.png" style="width:160px;">
+      <p>Global Fresh News is a modern digital news platform committed to delivering accurate, timely, and engaging stories from around the world. We provide comprehensive coverage of global affairs, health, business, lifestyle, education, technology, sports, entertainment, breaking news, and trending topics, among many others.
+
+      Driven by integrity and innovation, Global Fresh News connects readers to the pulse of the world offering insights that inform, inspire, and empower.</p>
+    </div>
+
+    <div class="translate-box">
+        <div id="google_translate_element"></div>
+    </div>     
+
+    <!-- ✅ COPYRIGHT -->
+        <p>
+          © <%= new Date().getFullYear() %> 
+          <%= setting.siteName || "Global Fresh News" %>. 
+          All rights reserved.
+        </p>
+
+    <div class="socials">
+        <a href="https://www.facebook.com/share/1CX81bifeY/?mibextid=wwXIfr">Facebook</a>
+        <a href="https://x.com/globalfreshnews?s=11">Twitter</a>
+        <a href="https://www.instagram.com/globalfreshnews?igsh=dXR6ajc4N21la2Rn&utm_source=qr">Instagram</a>
+        <a href="https://www.tiktok.com/@global_fresh_news?_r=1&_t=ZS-95NFCLdC7jV">TikTok</a>
+        <a href="https://youtube.com/@globalfreshnews12?si=wKU70G0Aa44x7U7n">Youtube</a>
+    </div>
+    </div>
+</footer>
+
+<div id="cookie-banner" class="cookie-banner">
+  <p>
+    This website uses cookies to improve your experience.
+    <button onclick="acceptCookies()">Accept</button>
+  </p>
+</div>
+
+<div class="skeleton"></div>
+<div class="skeleton"></div>
+
+<!-- HERO AUTO SLIDE -->
+<script>
+let slides = document.querySelectorAll(".slide");
+let current = 0;
+
+setInterval(() => {
+    if(slides.length === 0) return;
+    slides[current].classList.remove("active");
+    current = (current + 1) % slides.length;
+    slides[current].classList.add("active");
+}, 4000);
+</script>
+
+<!-- DARK MODE -->
+<script>
+// APPLY DARK MODE IMMEDIATELY (no flicker)
+(function () {
+    const saved = localStorage.getItem("theme");
+
+    if (
+        saved === "dark" ||
+        (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+        document.body.classList.add("dark");
+    }
+})();
+
+// TOGGLE FUNCTION
+function toggleDark() {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+</script>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const banner = document.getElementById("cookie-banner");
+
+  // CHECK COOKIE
+  const accepted = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("cookiesAccepted="));
+
+  // SHOW ONLY IF NOT ACCEPTED
+  if (!accepted) {
+    banner.style.display = "flex";
+  } else {
+    banner.style.display = "block";
+  }
+});
+
+function acceptCookies() {
+  document.cookie =
+    "cookiesAccepted=true; max-age=31536000; path=/";
+  document.getElementById("cookie-banner").style.display = "none";
+}
+</script>
+
+<script>
+function toggleMenu() {
+  const menu = document.querySelector(".side-menu");
+  const btn = document.querySelector(".menu-btn");
+
+  menu.classList.toggle("active");
+
+  // Change icon
+  if (menu.classList.contains("active")) {
+    btn.innerHTML = "✖"; // X
+  } else {
+    btn.innerHTML = "☰"; // menu
+  }
+}
+</script>
+
+<script>
+function closeMenu() {
+  document.querySelector(".side-menu").classList.remove("active");
+}
+</script>
+
+<script>
+window.addEventListener("load", () => {
+    document.querySelectorAll(".skeleton").forEach(el => {
+        el.style.display = "none";
+    });
+});
+</script>
+
+<script>
+document.addEventListener("click", async (e) => {
+  const link = e.target.closest(".pagination a");
+  if (!link) return;
+
+  e.preventDefault();
+
+  const url = link.getAttribute("href");
+
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+
+    // Parse HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+
+    // Get new posts section
+    const newContent = doc.querySelector("#posts-container");
+
+    document.querySelector("#posts-container").innerHTML =
+      newContent.innerHTML;
+
+    // Scroll to latest
+    window.scrollTo({
+    top: document.getElementById("latest").offsetTop - 80,
+    behavior: "auto"
+  });
+
+  } catch (err) {
+    console.error("Pagination error:", err);
+  }
+});
+</script>
+
+<script>
+function updateDateTime(){
+    const now = new Date();
+    const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+    };
+    document.getElementById("liveDateTime").innerHTML =
+        now.toLocaleString("en-US", options);
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+</script>
+
+<script>
+function toggleDiscover(){
+    const wrapper = document.querySelector(".discover-wrapper");
+    const track = document.querySelector(".discover-track");
+    const btn = document.querySelector(".discover-toggle");
+    if(track.style.display === "none"){
+        track.style.display = "flex";
+        btn.innerHTML = "▲";
+    } else {
+        track.style.display = "none";
+        btn.innerHTML = "▼";
+    }
+}
+</script>
+
+</body>
+</html>

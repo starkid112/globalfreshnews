@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+<div class="admin-container">
+
+<h2>Edit Page</h2>
+
+<form action="/admin/pages/edit/<%= page._id %>" method="POST">
+
+  <input type="text" name="title" value="<%= page.title %>">
+
+  <input type="text" name="slug" value="<%= page.slug %>">
+
+  <textarea name="content" id="editor" rows="10"><%= page.content %></textarea>
+
+  <button type="submit">Update</button>
+
+</form>
+
+</div>
+
+
+<script>
+let editor;
+
+ClassicEditor
+  .create(document.querySelector("#editor"), {
+    ckfinder: {
+      uploadUrl: "/upload-editor-image"
+    }
+  })
+  .then(newEditor => {
+    editor = newEditor;
+  })
+  .catch(error => console.error(error));
+
+/* 🔥 FIX SUBMIT ISSUE */
+document.querySelector("form").addEventListener("submit", function () {
+  if (editor) {
+    document.querySelector("textarea[name='content']").value = editor.getData();
+  }
+});
+</script>
+</body>
+</html>

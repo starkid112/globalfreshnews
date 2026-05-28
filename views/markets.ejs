@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- ✅ SEO TITLE -->
+    <title>
+      Live Markets | <%= setting.siteName || "Global Fresh News" %>
+    </title>
+
+    <!-- ✅ SEO DESCRIPTION -->
+    <meta name="description" content="Live crypto, forex and stock market updates with breaking financial news.">
+
+    <!-- ✅ OPEN GRAPH -->
+    <meta property="og:title" content="Live Markets | <%= setting.siteName %>">
+    <meta property="og:description" content="Live crypto, forex and stock market updates with breaking financial news.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/favicon.png">
+    <!-- ✅ MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>  
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+    <!-- MENU BUTTON -->
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <!-- SIDE MENU -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2><%= setting.siteName || "Global Fresh News" %></h2>
+            <button class="close-btn" onclick="closeMenu()">✖</button>
+
+        </div>
+        <a href="/">Home</a>
+        <a href="/category/Global">Global</a>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Markets">Markets</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Entertainment">Entertainment</a>
+        <a href="/category/Business">Business</a>
+        <a href="/category/Lifestyle">Lifestyle</a>
+        <a href="/category/Education">Education</a>
+        <a href="/sports/Football">Football</a>
+        <a href="/sports/Tennis">Tennis</a>
+        <a href="/sports/Basketball">Basketball</a>
+        <a href="/sports/Golf">Golf</a>
+        <a href="/sports/Boxing">Boxing</a>
+        <a href="/sports/Cricket">Cricket</a>
+        <a href="/sports/Rugby">Rugby</a>
+        <a href="/sports/Baseball">Baseball</a>
+        <a href="/sports/Hockey">Hockey</a>
+        <a href="/sports/Olympics">Olympics</a>
+        <a href="/sports/Motorsport">Motorsport</a>
+    </div>
+
+    <!-- LEFT SIDE -->
+    <div class="nav-left">
+        <a href="/">
+            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/category/Global">Global</a>
+            <a href="/category/Politics">Politics</a>
+            <a href="/category/Health">Health</a>
+            <a href="/category/Markets">Markets</a>
+            <a href="/category/Tech">Tech</a>
+            <a href="/category/Entertainment">Entertainment</a>
+            <a href="/category/Business">Business</a>
+            <a href="/category/Lifestyle">Lifestyle</a>
+            <a href="/category/Education">Education</a>
+
+            <!-- SPORTS DROPDOWN -->
+            <div class="dropdown">
+                <a href="#">Sports ▾</a>
+                <div class="dropdown-menu">
+                    <a href="/sports/Football">Football</a>
+                    <a href="/sports/Tennis">Tennis</a>
+                    <a href="/sports/Basketball">Basketball</a>
+                    <a href="/sports/Golf">Golf</a>
+                    <a href="/sports/Boxing">Boxing</a>
+                    <a href="/sports/Cricket">Cricket</a>
+                    <a href="/sports/Rugby">Rugby</a>
+                    <a href="/sports/Baseball">Baseball</a>
+                    <a href="/sports/Hockey">Hockey</a>
+                    <a href="/sports/Olympics">Olympics</a>
+                    <a href="/sports/Motorsport">Motorsport</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-right">
+        <form action="/search" method="GET" class="search-box">
+            <input type="text" name="q" placeholder="Search news..." required>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
+    <!-- DARK MODE -->
+    <button onclick="toggleDark()" class="dark-btn">🌙</button>
+</nav>
+
+<!-- ✅ PAGE TITLE -->
+<h1 class="markets-title">
+   Live Markets
+</h1>
+
+<!-- ✅ MARKET OVERVIEW -->
+<div class="market-box">
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+
+    <script type="text/javascript"
+        src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+        async>
+{
+  "colorTheme": "dark",
+  "dateRange": "1D",
+  "showChart": true,
+  "locale": "en",
+  "largeChartUrl": "",
+  "isTransparent": false,
+  "showSymbolLogo": true,
+  "width": "100%",
+  "height": "350",
+  "tabs": [
+    {
+      "title": "Crypto",
+      "symbols": [
+        { "s": "BINANCE:BTCUSDT", "d": "Bitcoin" },
+        { "s": "BINANCE:ETHUSDT", "d": "Ethereum" },
+        { "s": "BINANCE:SOLUSDT", "d": "Solana" },
+        { "s": "BINANCE:BNBUSDT", "d": "BNB" }
+      ]
+    },
+    {
+      "title": "Forex",
+      "symbols": [
+        { "s": "FX_IDC:USDNGN", "d": "USD/NGN" },
+        { "s": "FX:EURUSD", "d": "EUR/USD" },
+        { "s": "FX:GBPUSD", "d": "GBP/USD" },
+        { "s": "TVC:GOLD", "d": "Gold" }
+      ]
+    },
+    {
+      "title": "Stocks",
+      "symbols": [
+        { "s": "NASDAQ:AAPL", "d": "Apple" },
+        { "s": "NASDAQ:TSLA", "d": "Tesla" },
+        { "s": "NASDAQ:NVDA", "d": "NVIDIA" }
+      ]
+    }
+  ]
+}
+</script>
+
+  </div>
+</div>
+
+<!-- ✅ LATEST MARKET NEWS -->
+<h2 class="section-title">
+    Latest Market News
+</h2>
+
+<div class="posts">
+<% if (marketPosts.length > 0) { %>
+  <% marketPosts.forEach(post => { %>
+    <a href="/post/<%= post.slug %>" class="card-link">
+      <div class="card">
+        <img 
+          src="/uploads/<%= post.image || 'default.jpg' %>"
+          loading="lazy"
+          alt="<%= post.title %>">
+        <div class="card-content">
+          <h3><%= post.title %></h3>
+          <p>
+            <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 120) %>
+          </p>
+        </div>
+      </div>
+    </a>
+  <% }) %>
+<% } else { %>
+  <p class="empty-news">
+    No market news available yet.
+  </p>
+<% } %>
+</div>
+
+</body>
+</html>

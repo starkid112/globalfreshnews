@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+<div class="admin-container">
+
+<h2>Pages</h2>
+
+<a href="/admin/pages/new">+ Create Page</a>
+
+<% pages.forEach(page => { %>
+  <div class="admin-card">
+    <h3><%= page.title %></h3>
+
+    <a href="/admin/pages/edit/<%= page._id %>">Edit</a>
+
+  <form action="/admin/pages/delete/<%= page._id %>" method="POST"
+    onsubmit="return confirm('Are you sure you want to delete this post?')">
+    <button type="submit">Delete</button>
+  </form>
+  </div>
+<% }) %>
+
+</div>
+
+</body>
+</html>

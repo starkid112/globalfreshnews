@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+
+    <meta name="description" content="Latest global news, sports, tech and entertainment">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>  
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+
+    <!-- MENU BUTTON -->
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <!-- SIDE MENU -->
+    <div class="side-menu" id="sideMenu">
+
+        <div class="menu-header">
+            <h2><%= setting.siteName || "Global Fresh News" %></h2>
+            <button class="close-btn" onclick="closeMenu()">✖</button>
+        </div>
+
+        <a href="/">Home</a>
+        <a href="/category/Global">Global</a>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Trending">Trending</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Entertainment">Entertainment</a>
+
+        <a href="/sports/Football">Football</a>
+        <a href="/sports/Tennis">Tennis</a>
+        <a href="/sports/Basketball">Basketball</a>
+        <a href="/sports/Golf">Golf</a>
+        <a href="/sports/Boxing">Boxing</a>
+        <a href="/sports/Cricket">Cricket</a>
+        <a href="/sports/Rugby">Rugby</a>
+        <a href="/sports/Baseball">Baseball</a>
+        <a href="/sports/Hockey">Hockey</a>
+        <a href="/sports/Olympics">Olympics</a>
+        <a href="/sports/Motosport">Motosport</a>
+    </div>
+
+    <!-- LEFT SIDE -->
+    <div class="nav-left">
+        <a href="/">
+            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/category/Global">Global</a>
+            <a href="/category/Politics">Politics</a>
+            <a href="/category/Health">Health</a>
+            <a href="/category/Trending">Trending</a>
+            <a href="/category/Tech">Tech</a>
+            <a href="/category/Entertainment">Entertainment</a>
+
+            <!-- SPORTS DROPDOWN -->
+            <div class="dropdown">
+                <a href="#">Sports ▾</a>
+                <div class="dropdown-menu">
+                    <a href="/sports/Football">Football</a>
+                    <a href="/sports/Tennis">Tennis</a>
+                    <a href="/sports/Basketball">Basketball</a>
+                    <a href="/sports/Golf">Golf</a>
+                    <a href="/sports/Boxing">Boxing</a>
+                    <a href="/sports/Cricket">Cricket</a>
+                    <a href="/sports/Rugby">Rugby</a>
+                    <a href="/sports/Baseball">Baseball</a>
+                    <a href="/sports/Hockey">Hockey</a>
+                    <a href="/sports/Olympics">Olympics</a>
+                    <a href="/sports/Motosport">Motosport</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-right">
+        <form action="/search" method="GET" class="search-box">
+            <input type="text" name="q" placeholder="Search news..." required>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
+    <!-- DARK MODE -->
+    <button onclick="toggleDark()" class="dark-btn">🌙</button>
+
+</nav>
+
+<!-- ✅ HEADER -->
+<div class="page-header">
+    <h1><%= page.title %></h1>
+</div>
+
+<!-- ✅ CONTENT -->
+<div class="container">
+
+    <div class="about-content">
+        <%- page.content %>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+     <div class="footer-content">
+        <!--SITE NAME-->
+        <h2><%= setting.siteName || "Global Fresh News" %></h2>
+     </div> 
+
+    <div>
+      <h3>Company</h3>
+      <a href="/about">About Us</a>
+      <a href="/page/terms">Terms of Use</a>
+      <a href="/contact">Contact Us</a>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+
+    <div>
+      <h3>Specialist</h3>
+      <a href="#">Markets</a>
+    </div>
+
+     <div>
+      <img src="/images/logo.png" style="width:160px;">
+      <p>Global Fresh News is a modern digital news platform committed to delivering accurate, timely, and engaging stories from around the world. We provide comprehensive coverage of global affairs, health, business, lifestyle, education, technology, sports, entertainment, breaking news, and trending topics, among many others.
+
+      Driven by integrity and innovation, Global Fresh News connects readers to the pulse of the world offering insights that inform, inspire, and empower.</p>
+    </div>
+    
+    <!-- ✅ COPYRIGHT -->
+        <p>
+          © <%= new Date().getFullYear() %> 
+          <%= setting.siteName || "Global Fresh News" %>. 
+          All rights reserved.
+        </p>
+
+    <div class="socials">
+        <a href="https://www.facebook.com/share/1CX81bifeY/?mibextid=wwXIfr">Facebook</a>
+        <a href="https://x.com/globalfreshnews?s=11">Twitter</a>
+        <a href="https://www.instagram.com/globalfreshnews?igsh=dXR6ajc4N21la2Rn&utm_source=qr">Instagram</a>
+        <a href="https://www.tiktok.com/@global_fresh_news?_r=1&_t=ZS-95NFCLdC7jV">TikTok</a>
+        <a href="https://youtube.com/@globalfreshnews12?si=wKU70G0Aa44x7U7n">Youtube</a>
+    </div>
+    </div>
+</footer>
+
+
+<%- include("partials/darkmode") %>
+
+<!-- ✅ MENU SCRIPT -->
+<script>
+function toggleMenu() {
+  const menu = document.querySelector(".side-menu");
+  menu.classList.toggle("active");
+}
+
+function closeMenu() {
+  document.querySelector(".side-menu").classList.remove("active");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="admin-container">
+
+<h2>Media Library</h2>
+
+<div class="media-grid">
+  <% files.forEach(file => { %>
+    <div class="admin-card">
+      <img src="/uploads/<%= file %>">
+
+      <p><%= file %></p>
+
+      <form action="/admin/media/delete/<%= file %>" method="POST">
+        <button onclick="return confirm('Delete this media?')">Delete</button>
+      </form>
+    </div>
+  <% }) %>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+
+    <meta name="description" content="Latest global news, sports, tech and entertainment">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>  
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+
+    <!-- MENU BUTTON -->
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <!-- SIDE MENU -->
+    <div class="side-menu" id="sideMenu">
+
+        <div class="menu-header">
+            <h2><%= setting.siteName || "Global Fresh News" %></h2>
+            <button class="close-btn" onclick="closeMenu()">✖</button>
+        </div>
+
+        <a href="/">Home</a>
+        <a href="/category/Global">Global</a>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Markets">Markets</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Entertainment">Entertainment</a>
+        <a href="/category/Business">Business</a>
+        <a href="/category/Lifestyle">Lifestyle</a>
+        <a href="/category/Education">Education</a>
+
+        <a href="/sports/Football">Football</a>
+        <a href="/sports/Tennis">Tennis</a>
+        <a href="/sports/Basketball">Basketball</a>
+        <a href="/sports/Golf">Golf</a>
+        <a href="/sports/Boxing">Boxing</a>
+        <a href="/sports/Cricket">Cricket</a>
+        <a href="/sports/Rugby">Rugby</a>
+        <a href="/sports/Baseball">Baseball</a>
+        <a href="/sports/Hockey">Hockey</a>
+        <a href="/sports/Olympics">Olympics</a>
+        <a href="/sports/Motosport">Motosport</a>
+    </div>
+
+    <!-- LEFT SIDE -->
+    <div class="nav-left">
+        <a href="/">
+            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        </a>
+
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/category/Global">Global</a>
+            <a href="/category/Politics">Politics</a>
+            <a href="/category/Health">Health</a>
+           <a href="/category/Markets">Markets</a>
+            <a href="/category/Tech">Tech</a>
+            <a href="/category/Entertainment">Entertainment</a>
+            <a href="/category/Business">Business</a>
+            <a href="/category/Lifestyle">Lifestyle</a>
+            <a href="/category/Education">Education</a>
+
+            <!-- SPORTS DROPDOWN -->
+            <div class="dropdown">
+                <a href="#">Sports ▾</a>
+                <div class="dropdown-menu">
+                    <a href="/sports/Football">Football</a>
+                    <a href="/sports/Tennis">Tennis</a>
+                    <a href="/sports/Basketball">Basketball</a>
+                    <a href="/sports/Golf">Golf</a>
+                    <a href="/sports/Boxing">Boxing</a>
+                    <a href="/sports/Cricket">Cricket</a>
+                    <a href="/sports/Rugby">Rugby</a>
+                    <a href="/sports/Baseball">Baseball</a>
+                    <a href="/sports/Hockey">Hockey</a>
+                    <a href="/sports/Olympics">Olympics</a>
+                    <a href="/sports/Motosport">Motosport</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="nav-right">
+        <form action="/search" method="GET" class="search-box">
+            <input type="text" name="q" placeholder="Search news..." required>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
+    <!-- DARK MODE -->
+    <button onclick="toggleDark()" class="dark-btn">🌙</button>
+
+</nav>
+
+<div class="container">
+
+    <h1 class="section-title">
+        Sponsored Content
+    </h1>
+
+    <div class="sponsored-grid">
+
+        <% sponsoredPosts.forEach(post => { %>
+
+            <a href="/post/<%= post.slug %>" class="sponsored-card">
+
+                <img src="/uploads/<%= post.image || 'default.jpg' %>">
+
+                <div class="sponsored-content">
+                    <span class="sponsored-badge">
+                        SPONSORED
+                    </span>
+                    <h3><%= post.title %></h3>
+
+                    <div class="sponsored-stats">
+                        <span>👁 <%= post.views || 0 %></span>
+                        <span>❤️ <%= post.likes || 0 %></span>
+                    </div>
+
+                    <p>
+                      <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 120) %>
+                    </p>
+
+                </div>
+
+            </a>
+
+        <% }) %>
+
+    </div>
+
+</div>
+
+<%- include("partials/darkmode") %>
+</body>
+</html>

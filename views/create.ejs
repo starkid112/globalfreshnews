@@ -1,0 +1,203 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="icon" type="image/png" href="/favicon.png">  
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ✅ CKEditor -->
+    <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
+</head>  
+<body>  
+  
+<!-- ✅ NAVBAR -->  
+<nav class="navbar">  
+    <div class="nav-left">  
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        <div class="nav-links">  
+            <a href="/">Home</a>  
+            <a href="/category/Global">Global</a>  
+            <a href="/category/Markets">Markets</a>  
+            <a href="/category/Sports">Sports</a>  
+            <a href="/category/Tech">Tech</a>  
+            <a href="/category/Entertainment">Entertainment</a>
+            <a href="/category/Business">Business</a>
+        </div>  
+    </div>  
+
+    <div class="nav-right">  
+        <a href="/admin">Dashboard</a>  
+        <a href="/logout">Logout</a>  
+    </div>  
+</nav>  
+  
+<!-- ✅ HEADER -->  
+<div class="page-header">  
+    <h1>Create New Post ✍️</h1>  
+    <p>Publish news and updates to your audience</p>  
+</div>  
+  
+<!-- ✅ FORM -->  
+<div class="container">  
+    <div class="form-box">  
+
+        <form action="/create" method="POST" enctype="multipart/form-data">  
+
+            <!-- TITLE -->  
+            <label>Post Title</label>  
+            <input type="text" name="title" id="title" placeholder="Enter title..." required>  
+
+            <!-- SLUG -->
+            <label>Slug (Auto Generated)</label>
+            <input type="text" name="slug" id="slug" readonly>
+
+            <!-- AUTHOR -->  
+            <label>Author</label>  
+            <input type="text" name="author" placeholder="Author name..." required>  
+
+            <!-- META DESCRIPTION -->
+            <label>Meta Description (SEO)</label>
+            <textarea name="metaDescription" maxlength="160" placeholder="Short description for Google (max 160 characters)"></textarea>
+
+            <label>SEO Keywords</label>
+            <input type="text" name="keywords" placeholder="SEO Keywords">
+
+            <!-- CATEGORY -->  
+            <label>Category</label>  
+            <select name="category" required>  
+                <option value="">Select Category</option>  
+                <option value="Global">Global</option>  
+                <option value="Politics">Politics</option>  
+                <option value="Health">Health</option>  
+                <option value="Tech">Tech</option>  
+                <option value="Sports">Sports</option>  
+                <option value="Entertainment">Entertainment</option>  
+                <option value="Trending">Trending</option>  
+                <option value="Business">Business</option>
+                <option value="Markets">Markets</option>
+                <option value="Lifestyle">Lifestyle</option>
+                <option value="Education">Education</option>
+            </select>  
+
+            <!-- SUBCATEGORY -->  
+            <label>Topic / Subcategory (optional)</label>  
+            <select name="subCategory">  
+                <option value="">Select (Not only for Sports but if related to Sports too)</option>  
+                <option>Football</option>  
+                <option>Tennis</option>  
+                <option>Basketball</option>  
+                <option>Golf</option>  
+                <option>Boxing</option>  
+                <option>Cricket</option>  
+                <option>Rugby</option>  
+                <option>Baseball</option>  
+                <option>Hockey</option>  
+                <option>Olympics</option>  
+                <option>Motorsport</option>  
+            </select>  
+
+            <!-- IMAGE -->  
+            <label>Upload Image</label>  
+            <input type="file" name="image">
+            <img id="preview" style="max-width:100%; margin-top:10px; display:none;">
+
+            <!-- ALT TEXT -->
+            <label>Image Alt Text (SEO)</label>
+            <input type="text" name="altText" placeholder="Describe the image">
+
+            <!-- IMAGE CAPTION -->
+            <label>Image Caption (Visible)</label>
+            <input type="text" name="caption" placeholder="Write caption under image">
+
+            <!-- CONTENT -->  
+            <label>Content</label>  
+            <textarea name="content" id="editor" placeholder="Write your article..." required></textarea>  
+
+            <!-- WORD COUNT -->
+            <p id="wordCount">Words: 0</p>
+
+            <!-- OPTIONS -->  
+            <div class="form-options">  
+                <label>Feature Type</label>  
+                <select name="featureType">  
+                    <option value="none">None</option>  
+                    <option value="big">Big Feature</option>  
+                    <option value="small">Small Feature</option>  
+                </select>  
+
+                <label>  
+                    <input type="checkbox" name="isBreaking"> Breaking News  
+                </label>  
+            </div>  
+            
+            <div style="margin-top:5px;">
+             <label class="sponsored-check">
+               <input type="checkbox" name="sponsored"> Sponsored Post
+            </label>
+            </div>
+
+            <div style="margin-top:5px;">
+            <label>
+                <input type="checkbox" name="isPinned"> Pin Post To Homepage
+            </label>
+            </div>
+
+            <div style="margin-top:10px;">
+            <label> Pin Until </label>
+                <input type="date" name="pinnedUntil">
+            </div>
+
+            <!-- SUBMIT -->  
+            <button type="submit">Publish Post</button>  
+
+        </form>  
+
+    </div>  
+</div>  
+
+
+<!-- ✅ SCRIPTS -->
+
+<script>
+/* 🔥 SLUG GENERATOR */
+document.getElementById("title").addEventListener("input", function() {
+    let slug = this.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9 ]/g, "")
+        .replace(/\s+/g, "-");
+
+    document.getElementById("slug").value = slug;
+});
+</script>
+
+<script>
+window.onload = function () {
+    CKEDITOR.replace('editor', {
+        filebrowserUploadUrl: '/upload-editor-image',
+        filebrowserUploadMethod: 'form',
+        height: 300
+    });
+};
+</script>
+
+<script>
+document.querySelector("input[name='image']").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById("preview");
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    }
+});
+</script>
+
+</body>  
+</html>

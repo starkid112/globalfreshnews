@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/">
+            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+        </a>
+        <span class="logo">Global Fresh News</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="/">View Site</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1 class="title">Admin Dashboard</h1>
+
+<ul class="admin-menu">
+    <li><a href="/admin/pages">Pages</a></li>
+  <li><a href="/admin/media">Media</a></li>
+  <li><a href="/admin/comments">Comments</a></li>
+  <li><a href="/admin/ads">Ads</a></li>
+  <li><a href="/admin/settings">Site Settings</a></li>
+</ul>
+
+    <!-- 🔍 SEARCH BAR -->
+    <form method="GET" action="/admin" class="admin-search">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Search posts by title..." 
+            value="<%= query || '' %>"
+        >
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- CREATE BUTTON -->
+    <div style="margin:20px 0;">
+        <a href="/admin/create" class="btn">+ Create New Post</a>
+        <a href="/change-password">Change Password</a>
+    </div>
+
+    <!-- POSTS TABLE -->
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Views</th>
+                <th>Likes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% posts.forEach(post => { %>
+                <tr>
+                    <td><%= post.title %></td>
+                    <td><%= post.category %></td>
+                    <td><%= post.views %></td>
+                    <td><%= post.likes %></td>
+
+                <td>
+                    <a href="/post/<%= post.slug %>" class="view-btn">View</a>
+
+                    <a href="/edit/<%= post._id %>" class="edit-btn">Edit</a>
+
+                    <a href="/delete/<%= post._id %>" class="delete-btn"
+                    onclick="return confirm('Delete this post?')">Delete</a>
+                </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+     <div class="footer-content">
+        <!--SITE NAME-->
+        <h2><%= setting.siteName || "Global Fresh News" %></h2>
+     </div>    
+    <div class="footer-links">
+        <a href="/about">About</a>
+        <a href="/page/privacy">Privacy Policy</a>
+        <a href="/page/terms">Terms of Use</a>
+        <a href="/contact">Contact</a>
+    </div>
+
+    <div class="translate-box">
+        <div id="google_translate_element"></div>
+    </div>     
+
+    <!-- ✅ COPYRIGHT -->
+        <p>
+          © <%= new Date().getFullYear() %> 
+          <%= setting.siteName || "Global Fresh News" %>. 
+          All rights reserved.
+        </p>
+
+    <div class="socials">
+        <a href="https://www.facebook.com/share/1CX81bifeY/?mibextid=wwXIfr">Facebook</a>
+        <a href="https://x.com/globalfreshnews?s=11">Twitter</a>
+        <a href="https://www.instagram.com/globalfreshnews?igsh=dXR6ajc4N21la2Rn&utm_source=qr">Instagram</a>
+        <a href="https://www.tiktok.com/@global_fresh_news?_r=1&_t=ZS-95NFCLdC7jV">TikTok</a>
+        <a href="https://youtube.com/@globalfreshnews12?si=wKU70G0Aa44x7U7n">Youtube</a>
+    </div>
+</footer>
+
+
+</body>
+</html>
