@@ -234,7 +234,7 @@ app.post("/forgot-password", async (req, res) => {
       },
     });
 
-    const link = `http://localhost:3000/reset-password/${token}`;
+    const link = `https://globalfreshnews.com/reset-password/${token}`;
 
     await transporter.sendMail({
       from: '"Global Fresh News" <chikaodiliuwaonu12@gmail.com>',
@@ -1164,7 +1164,7 @@ app.get("/sitemap.xml", async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
 
-    const baseUrl = "http://localhost:3000";
+    const baseUrl = "https://globalfreshnews.com";
 
     let urls = posts
       .map(
