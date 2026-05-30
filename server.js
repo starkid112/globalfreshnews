@@ -833,7 +833,7 @@ app.get("/post/:slug", async (req, res) => {
       _id: { $ne: post._id },
     })
       .sort({ createdAt: -1 })
-      .limit(6);
+      .limit(9);
     
     const sponsoredPosts = await Post.find({
       sponsored: true,
