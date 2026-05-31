@@ -416,8 +416,18 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 
 // Show all ads
 app.get("/admin/ads", async (req, res) => {
-  const ads = await Ad.find();
-  res.render("admin/ads", { ads });
+  try {
+    const ads = await Ad.find().sort({ _id: -1 });
+    res.render("admin/ads", {
+      ads: ads || [],
+    });
+  } catch (err) {
+    console.error("ADS PAGE ERROR:", err);
+    res.send(`
+      <h2>Ads Page Error</h2>
+      <pre>${err.stack}</pre>
+    `);
+  }
 });
 
 //===== ADs =====
@@ -494,8 +504,13 @@ app.use(async (req, res, next) => {
 });
 
 app.post("/admin/ads/delete/:id", async (req, res) => {
-  await Ad.findByIdAndDelete(req.params.id);
-  res.redirect("/admin/ads");
+  try {
+    await Ad.findByIdAndDelete(req.params.id);
+    res.redirect("/admin/ads");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/admin/ads");
+  }
 });
 
 app.get("/admin/ads/edit/:id", async (req, res) => {
@@ -511,16 +526,22 @@ app.post("/admin/ads/edit/:id", async (req, res) => {
     position,
     code,
   });
-
   res.redirect("/admin/ads");
 });
 
 app.post("/admin/ads/toggle/:id", async (req, res) => {
-  const ad = await Ad.findById(req.params.id);
-  ad.active = !ad.active;
-  await ad.save();
-
-  res.redirect("/admin/ads");
+  try {
+    const ad = await Ad.findById(req.params.id);
+    if (!ad) {
+      return res.redirect("/admin/ads");
+    }
+    ad.active = !ad.active;
+    await ad.save();
+    res.redirect("/admin/ads");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/admin/ads");
+  }
 });
 
 app.get("/ad-click/:id", async (req, res) => {
