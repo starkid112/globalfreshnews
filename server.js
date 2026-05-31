@@ -131,13 +131,18 @@ function checkAuth(req, res, next) {
 // ===== DB =====
 mongoose.set("strictQuery", true);
 mongoose.set("bufferCommands", false);
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-  console.log("✅ MongoDB Connected");
-})
-.catch((err) => {
-  console.log("❌ MongoDB Error:", err);
-});
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB Connected");
+    app.listen(3000, () => {
+      console.log("🚀 Server running on port 3000");
+    });
+  } catch (err) {
+    console.log("❌ MongoDB Error:", err);
+  }
+}
+startServer();
 mongoose.connection.on("connected", () => {
   console.log("✅ Mongoose connected");
 });
@@ -146,7 +151,7 @@ mongoose.connection.on("error", (err) => {
 });
 mongoose.connection.on("disconnected", () => {
   console.log("⚠️ Mongoose disconnected");
-});
+})
 
 // ✅ PUT IT HERE (VERY IMPORTANT)
 app.use(async (req, res, next) => {
@@ -428,8 +433,17 @@ app.get("/admin/ads", async (req, res) => {
 });
 
 //===== ADs =====
-app.get("/admin/ads/new", (req, res) => {
-  res.render("admin/new-ad");
+app.get("/admin/ads", async (req, res) => {
+  try {
+    const ads = await Ad.find();
+    res.render("admin/ads", {
+      ads,
+      setting: res.locals.setting || null
+    });
+  } catch (err) {
+    console.log("ADS PAGE ERROR:", err);
+    res.send(err.stack);
+  }
 });
 
 app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
