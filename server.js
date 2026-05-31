@@ -417,14 +417,11 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 // Show all ads
 app.get("/admin/ads", async (req, res) => {
   try {
-    const ads = await Ad.find().sort({ _id: -1 });
-    res.render("admin/ads", {
-      ads: ads || [],
-    });
+    const ads = await Ad.find();
+    res.render("admin/ads", { ads });
   } catch (err) {
-    console.error("ADS PAGE ERROR:", err);
     res.send(`
-      <h2>Ads Page Error</h2>
+      <h1>ADS ERROR</h1>
       <pre>${err.stack}</pre>
     `);
   }
