@@ -441,7 +441,6 @@ app.get("/admin/ads", async (req, res) => {
       setting: res.locals.setting || null
     });
   } catch (err) {
-    console.log("ADS PAGE ERROR:", err);
     res.send(err.stack);
   }
 });
