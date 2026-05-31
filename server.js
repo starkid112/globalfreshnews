@@ -415,16 +415,8 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 });
 
 // Show all ads
-app.get("/admin/ads", async (req, res) => {
-  try {
-    const ads = await Ad.find();
-    res.render("admin/ads", { ads });
-  } catch (err) {
-    res.send(`
-      <h1>ADS ERROR</h1>
-      <pre>${err.stack}</pre>
-    `);
-  }
+app.get("/admin/ads", (req, res) => {
+  res.send("ADS ROUTE WORKING");
 });
 
 //===== ADs =====
