@@ -1,19 +1,138 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
-<title>Ads Test</title>
-
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= (typeof setting !== "undefined" && setting.siteName)
+      ? setting.siteName
+      : "Global Fresh News" %>
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
 </head>
-
 <body>
 
-<h1>ADS PAGE WORKING</h1>
+<nav class="navbar">
+    <div class="nav-left">
+        <img  
+           src="/uploads/<%= (typeof setting !== 'undefined' && setting.logo)
+           ? setting.logo
+           : 'logo.png' %>"
+           class="logo-img">
+    </div>
 
-<p>Total ads: <%= ads.length %></p>
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="admin-container">
+
+<h2>Ads Management</h2>
+
+<!-- ================= ADD NEW AD ================= -->
+<div class="admin-card">
+  <h3>Add New Ad</h3>
+
+  <!-- ✅ IMPORTANT: enctype added -->
+  <form action="/admin/ads/new" method="POST" enctype="multipart/form-data" class="admin-form">
+
+    <input type="text" name="title" placeholder="Ad Title" required>
+
+    <select name="position">
+      <option value="header">Header</option>
+      <option value="sidebar">Sidebar</option>
+      <option value="footer">Footer</option>
+      <option value="post">Post</option>
+    </select>
+
+    <textarea name="code" placeholder="Paste ad HTML (optional)" rows="5"></textarea>
+
+    <input type="text" name="link" placeholder="Ad Link (for image ads)">
+
+    <input type="file" name="image" onchange="previewAd(event)">
+
+    <!-- IMAGE PREVIEW -->
+    <img id="preview" style="width:100%; margin-top:10px; display:none; border-radius:6px;">
+
+    <input type="date" name="startDate">
+    <input type="date" name="endDate">
+
+    <button type="submit" class="admin-btn btn-primary">Save Ad</button>
+
+  </form>
+</div>
+
+<!-- ================= ALL ADS ================= -->
+<h3>All Ads</h3>
+
+<% if (ads && ads.length > 0) { %>
+
+  <% ads.forEach(ad => { %>
+    <div class="admin-card">
+
+      <div class="ad-header">
+        <h3><%= ad.title %></h3>
+        <span class="status <%= ad.active ? 'active' : 'inactive' %>">
+          <%= ad.active ? "Active" : "Inactive" %>
+        </span>
+      </div>
+
+      <p><strong>Position:</strong> <%= ad.position %></p>
+      <p><strong>Clicks:</strong> <%= ad.clicks || 0 %></p>
+
+      <!-- ✅ PREVIEW (IMAGE OR CODE) -->
+      <div class="ad-preview">
+
+        <% if (ad.image) { %>
+          <a href="/ad-click/<%= ad._id %>" target="_blank">
+            <img src="/uploads/ads/<%= ad.image %>" style="width:100%; border-radius:6px;">
+          </a>
+        <% } else { %>
+          <%- ad.code || "" %>
+        <% } %>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="ad-actions">
+
+        <a href="/admin/ads/edit/<%= ad._id %>" class="admin-btn btn-edit">Edit</a>
+
+        <form action="/admin/ads/delete/<%= ad._id %>" method="POST">
+          <button onclick="return confirm('Delete this ad?')">Delete</button>
+        </form>
+
+        <form action="/admin/ads/toggle/<%= ad._id %>" method="POST">
+          <button class="admin-btn btn-toggle">
+            <%= ad.active ? "Deactivate" : "Activate" %>
+          </button>
+        </form>
+
+        <p>Clicks: <%= ad.clicks %></p>
+      </div>
+
+    </div>
+  <% }) %>
+
+<% } else { %>
+
+  <p>No ads yet</p>
+
+<% } %>
+
+</div>
+
+<!-- ✅ IMAGE PREVIEW SCRIPT -->
+<script>
+function previewAd(event) {
+  const img = document.getElementById("preview");
+  img.src = URL.createObjectURL(event.target.files[0]);
+  img.style.display = "block";
+}
+</script>
 
 </body>
-
 </html>
