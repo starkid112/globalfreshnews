@@ -426,32 +426,26 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 
 // Show all ads
 app.get("/admin/ads", checkAuth, async (req, res) => {
-
   try {
-
+    const ads = await Ad.find();
+    
     res.render("admin/ads", {
-
-      ads: [],
-
-      setting: {
-
-        siteName: "TEST",
-
-        logo: ""
-
-      }
-
+      ads,
+      setting: res.locals.setting || null
     });
-
   } catch (err) {
-
+    console.log(err);
     res.send(err.stack);
-
   }
-
 });
 
 //===== ADs =====
+app.get("/admin/ads/new", checkAuth, (req, res) => {
+  res.render("admin/new-ad", {
+    setting: res.locals.setting || null
+  });
+});
+
 app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
   const { title, position, startDate, endDate, code, link } = req.body;
 
