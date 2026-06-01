@@ -426,8 +426,30 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 
 // Show all ads
 app.get("/admin/ads", checkAuth, async (req, res) => {
-  res.send("ADS ROUTE REACHED");
-})
+
+  try {
+
+    res.render("admin/ads", {
+
+      ads: [],
+
+      setting: {
+
+        siteName: "TEST",
+
+        logo: ""
+
+      }
+
+    });
+
+  } catch (err) {
+
+    res.send(err.stack);
+
+  }
+
+});
 
 //===== ADs =====
 app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
