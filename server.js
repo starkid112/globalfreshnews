@@ -426,22 +426,8 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 
 // Show all ads
 app.get("/admin/ads", checkAuth, async (req, res) => {
-  try {
-    const ads = await Ad.find();
-    console.log("ADS COUNT:", ads.length);
-    res.render("admin/ads", {
-      ads,
-      setting: res.locals.setting || null
-    });
-  } catch (err) {
-    console.error("ADS PAGE ERROR:");
-    console.error(err);
-    res.send(`
-      <h1>ADS ERROR</h1>
-      <pre>${err.stack}</pre>
-    `);
-  }
-});
+  res.send("ADS ROUTE REACHED");
+})
 
 //===== ADs =====
 app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
