@@ -428,14 +428,18 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 app.get("/admin/ads", checkAuth, async (req, res) => {
   try {
     const ads = await Ad.find();
-    
+    console.log("ADS COUNT:", ads.length);
     res.render("admin/ads", {
       ads,
       setting: res.locals.setting || null
     });
   } catch (err) {
-    console.log(err);
-    res.send(err.stack);
+    console.error("ADS PAGE ERROR:");
+    console.error(err);
+    res.send(`
+      <h1>ADS ERROR</h1>
+      <pre>${err.stack}</pre>
+    `);
   }
 });
 
