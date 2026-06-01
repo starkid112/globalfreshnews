@@ -131,17 +131,7 @@ function checkAuth(req, res, next) {
 // ===== DB =====
 mongoose.set("strictQuery", true);
 mongoose.set("bufferCommands", false);
-async function startServer() {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("✅ MongoDB Connected");
-    app.listen(3000, () => {
-      console.log("🚀 Server running on port 3000");
-    });
-  } catch (err) {
-    console.log("❌ MongoDB Error:", err);
-  }
-}
+
 startServer();
 mongoose.connection.on("connected", () => {
   console.log("✅ Mongoose connected");
@@ -152,6 +142,21 @@ mongoose.connection.on("error", (err) => {
 mongoose.connection.on("disconnected", () => {
   console.log("⚠️ Mongoose disconnected");
 })
+
+// ===== SERVER =====
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB Connected");
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.log("❌ MongoDB Error:", err);
+  }
+}
+
 
 // ✅ PUT IT HERE (VERY IMPORTANT)
 app.use(async (req, res, next) => {
@@ -420,31 +425,21 @@ app.post("/admin/comments/delete/:id", async (req, res) => {
 });
 
 // Show all ads
-app.get("/admin/ads", async (req, res) => {
+app.get("/admin/ads", checkAuth, async (req, res) => {
   try {
     const ads = await Ad.find();
-    res.send(`
-      <h1>ADS FOUND</h1>
-      <pre>${JSON.stringify(ads, null, 2)}</pre>
-    `);
-  } catch (err) {
-    res.send(err.stack);
-  }
-});
-
-//===== ADs =====
-app.get("/admin/ads", async (req, res) => {
-  try {
-    const ads = await Ad.find();
+    
     res.render("admin/ads", {
       ads,
       setting: res.locals.setting || null
     });
   } catch (err) {
+    console.log(err);
     res.send(err.stack);
   }
 });
 
+//===== ADs =====
 app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
   const { title, position, startDate, endDate, code, link } = req.body;
 
@@ -523,9 +518,17 @@ app.post("/admin/ads/delete/:id", async (req, res) => {
   }
 });
 
-app.get("/admin/ads/edit/:id", async (req, res) => {
-  const ad = await Ad.findById(req.params.id);
-  res.render("admin/edit-ad", { ad });
+app.get("/admin/ads/edit/:id", checkAuth, async (req, res) => {
+  try {
+    const ad = await Ad.findById(req.params.id);
+    res.render("admin/edit-ad", {
+      ad,
+      setting: res.locals.setting || null
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err.stack);
+  }
 });
 
 app.post("/admin/ads/edit/:id", async (req, res) => {
@@ -1249,8 +1252,3 @@ app.use((err, req, res, next) => {
 });
 
 // ===== SERVER =====
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
