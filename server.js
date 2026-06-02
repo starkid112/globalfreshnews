@@ -1202,30 +1202,95 @@ app.get("/markets", async (req, res) => {
 // ===== SITEMAP =====
 app.get("/sitemap.xml", async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
-
     const baseUrl = "https://globalfreshnews.com";
 
-    let urls = posts
-      .map(
-        (post) => `
+    const posts = await Post.find().sort({ createdAt: -1 });
+    const pages = await Page.find();
+    
+    let urls = "";
+
+    // Homepage
+    urls += `
+    <url>
+      <loc>${baseUrl}/</loc>
+      <changefreq>hourly</changefreq>
+      <priority>1.0</priority>
+    </url>`;
+
+    // Static important pages
+    urls += `
+    <url>
+      <loc>${baseUrl}/contact</loc>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+    </url>
+    <url>
+      <loc>${baseUrl}/markets</loc>
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+    <url>
+      <loc>${baseUrl}/sponsored</loc>
+      <changefreq>daily</changefreq>
+      <priority>0.7</priority>
+    </url>`;
+
+    // Categories
+    const categories = [
+      "Global",
+      "Tech",
+      "Sports",
+      "Entertainment",
+      "Politics",
+      "Health",
+      "Education",
+      "Business",
+      "Markets",
+      "Lifestyle"
+    ];
+    categories.forEach(cat => {
+      urls += `
+      <url>
+        <loc>${baseUrl}/category/${encodeURIComponent(cat)}</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>`;
+    });
+
+    // Custom Pages
+    pages.forEach(page => {
+      urls += `
+      <url>
+        <loc>${baseUrl}/${page.slug}</loc>
+        <lastmod>${new Date(
+          page.updatedAt || page.createdAt || Date.now()
+        ).toISOString()}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+      </url>`;
+    });
+
+    // Posts
+    posts.forEach(post => {
+      urls += `
       <url>
         <loc>${baseUrl}/post/${post.slug}</loc>
-        <lastmod>${new Date(post.updatedAt || post.createdAt).toISOString()}</lastmod>
-      </url>`,
-      )
-      .join("");
+        <lastmod>${new Date(
+          post.updatedAt || post.createdAt
+        ).toISOString()}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+      </url>`;
+    });
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      <url>
-        <loc>${baseUrl}/</loc>
-      </url>
-      ${urls}
-    </urlset>`;
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+    
     res.header("Content-Type", "application/xml");
     res.send(sitemap);
+
   } catch (err) {
     console.log("SITEMAP ERROR:", err);
     res.status(500).send("Error generating sitemap");
