@@ -247,7 +247,7 @@ app.post("/forgot-password", async (req, res) => {
     const link = `https://globalfreshnews.com/reset-password/${token}`;
 
     await transporter.sendMail({
-      from: '"Global Fresh News" <chikaodiliuwaonu12@gmail.com>',
+      from: '"Global Fresh News" <globalfreshnews12@gmail.com>',
       to: admin.email,
       subject: "Password Reset",
       html: `
@@ -357,7 +357,7 @@ app.post("/contact", upload.none(), async (req, res) => {
 
     await transporter.sendMail({
       from: `"${name}" <${email}>`,
-      to: "chikaodiliuwaonu12@gmail.com",
+      to: "globalfreshnews12@gmail.com",
       subject: "New Contact Message",
       html: `
         <h2>New Message</h2>
@@ -1206,7 +1206,7 @@ app.get("/sitemap.xml", async (req, res) => {
 
     const posts = await Post.find().sort({ createdAt: -1 });
     const pages = await Page.find();
-    
+
     let urls = "";
 
     // Homepage
