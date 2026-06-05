@@ -32,23 +32,120 @@
 
 <h2>Edit Ad</h2>
 
-<form action="/admin/ads/edit/<%= ad._id %>" method="POST">
+<form action="/admin/ads/edit/<%= ad._id %>"
+      method="POST"
+      enctype="multipart/form-data"
+      class="admin-form">
 
-  <input type="text" name="title" value="<%= ad.title %>" required><br><br>
+  <input
+    type="text"
+    name="title"
+    value="<%= ad.title %>"
+    required
+  >
 
   <select name="position">
-    <option value="header" <%= ad.position === "header" ? "selected" : "" %>>Header</option>
-    <option value="sidebar" <%= ad.position === "sidebar" ? "selected" : "" %>>Sidebar</option>
-    <option value="footer" <%= ad.position === "footer" ? "selected" : "" %>>Footer</option>
-  </select><br><br>
 
-  <textarea name="code" rows="6"><%= ad.code || "" %></textarea><br><br>
+    <option value="header"
+      <%= ad.position === "header" ? "selected" : "" %>>
+      Header
+    </option>
 
-  <button type="submit">Update Ad</button>
+    <option value="homepage"
+      <%= ad.position === "homepage" ? "selected" : "" %>>
+      Homepage Sponsored
+    </option>
+
+    <option value="sidebar"
+      <%= ad.position === "sidebar" ? "selected" : "" %>>
+      Sidebar
+    </option>
+
+    <option value="post-header"
+      <%= ad.position === "post-header" ? "selected" : "" %>>
+      Post Header
+    </option>
+
+    <option value="post-middle"
+      <%= ad.position === "post-middle" ? "selected" : "" %>>
+      Post Middle
+    </option>
+
+    <option value="post-footer"
+      <%= ad.position === "post-footer" ? "selected" : "" %>>
+      Post Footer
+    </option>
+
+    <option value="footer"
+      <%= ad.position === "footer" ? "selected" : "" %>>
+      Footer
+    </option>
+
+  </select>
+
+  <textarea
+    name="code"
+    rows="6"
+    placeholder="Paste ad HTML (optional)"
+  ><%= ad.code || "" %></textarea>
+
+  <input
+    type="text"
+    name="link"
+    value="<%= ad.link || '' %>"
+    placeholder="Ad Link"
+  >
+
+  <input
+    type="file"
+    name="image"
+    onchange="previewAd(event)"
+  >
+
+  <% if(ad.image){ %>
+
+    <img
+      id="preview"
+      src="/uploads/ads/<%= ad.image %>"
+      style="width:100%;margin-top:10px;border-radius:6px;"
+    >
+
+  <% } else { %>
+
+    <img
+      id="preview"
+      style="width:100%;margin-top:10px;border-radius:6px;display:none;"
+    >
+
+  <% } %>
+
+  <input
+    type="date"
+    name="startDate"
+    value="<%= ad.startDate ? ad.startDate.toISOString().split('T')[0] : '' %>"
+  >
+
+  <input
+    type="date"
+    name="endDate"
+    value="<%= ad.endDate ? ad.endDate.toISOString().split('T')[0] : '' %>"
+  >
+
+  <button type="submit" class="admin-btn btn-primary">
+    Update Ad
+  </button>
 
 </form>
 
 </div>
+
+<script>
+function previewAd(event){
+  const img = document.getElementById("preview");
+  img.src = URL.createObjectURL(event.target.files[0]);
+  img.style.display = "block";
+}
+</script>
 
 </body>
 </html>

@@ -1,4 +1,7 @@
 require("dotenv").config();
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET missing");
+}
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -12,6 +15,10 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const helmet = require("helmet");
 const compression = require("compression");
+const sanitizeHtml = require("sanitize-html");
+const escape = require("escape-html");
+const rateLimit = require("express-rate-limit");
+const MongoStore = require("connect-mongo").default;
 
 const Post = require("./models/Post");
 const Admin = require("./models/Admin");
@@ -21,6 +28,18 @@ const Page = require("./models/Page");
 const Setting = require("./models/Setting");
 
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many login attempts. Try again after 15 minutes.",
+});
+
+app.use(limiter);
 app.set("trust proxy", 1);
 
 function capitalizeWords(str) {
@@ -59,6 +78,7 @@ app.use(express.json());
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    hsts: true
   })
 );
 
@@ -85,12 +105,22 @@ const postStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, postUploadPath);
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
+
+filename: (req, file, cb) => {
+  const ext = path.extname(file.originalname);
+  cb(null, Date.now() + "-" + Math.round(Math.random() * 1e9) + ext);
+}
 });
 
-const uploadPost = multer({ storage: postStorage });
+const uploadPost = multer({
+  storage: postStorage,
+
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+
+    cb(null, allowed.includes(file.mimetype));
+  },
+});
 
 
 // ADS
@@ -99,11 +129,24 @@ const adsStorage = multer.diskStorage({
     cb(null, adsUploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    const ext = path.extname(file.originalname);
+
+    cb(
+      null,
+      Date.now() + "-" + Math.round(Math.random() * 1e9) + ext,
+    );
   }
 });
 
-const uploadAd = multer({ storage: adsStorage });
+const uploadAd = multer({
+  storage: adsStorage,
+
+  fileFilter: (req, file, cb) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+
+    cb(null, allowed.includes(file.mimetype));
+  },
+});
 
 // ===== MIDDLEWARE =====
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -112,11 +155,21 @@ app.set("view engine", "ejs");
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "mysecretkey",
+    secret: process.env.SESSION_SECRET,
+
     resave: false,
     saveUninitialized: false,
+
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+      ttl: 24 * 60 * 60,
+    }),
+
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     },
   }),
@@ -141,7 +194,7 @@ mongoose.connection.on("error", (err) => {
 });
 mongoose.connection.on("disconnected", () => {
   console.log("⚠️ Mongoose disconnected");
-})
+});
 
 // ===== SERVER =====
 async function startServer() {
@@ -182,7 +235,7 @@ app.use(async (req, res, next) => {
 // ===== LOGIN =====
 app.get("/login", (req, res) => res.render("login"));
 
-app.post("/login", async (req, res) => {
+app.post("/login", loginLimiter, async (req, res) => {
   const admin = await Admin.findOne({ username: req.body.username });
   if (!admin) return res.send("User not found");
 
@@ -310,11 +363,11 @@ app.post("/reset-password/:token", async (req, res) => {
 });
 
 // ===== ADMIN REGISTER =====
-app.get("/admin/register", (req, res) => {
+app.get("/admin/register", checkAuth, (req, res) => {
   res.render("admin-register");
 });
 
-app.post("/admin/register", async (req, res) => {
+app.post("/admin/register", checkAuth, async (req, res) => {
   const { username, email, password } = req.body;
 
   const existing = await Admin.findOne({ email });
@@ -343,6 +396,10 @@ app.post("/contact", upload.none(), async (req, res) => {
 
     const { name, email, message } = req.body;
 
+    const safeName = escape(name);
+    const safeEmail = escape(email);
+    const safeMessage = escape(message);
+
     if (!name || !email || !message) {
       return res.send("❌ All fields are required");
     }
@@ -356,14 +413,14 @@ app.post("/contact", upload.none(), async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: `"${name}" <${email}>`,
-      to: "globalfreshnews12@gmail.com",
+      from: process.env.EMAIL,
+      replyTo: email,
       subject: "New Contact Message",
       html: `
         <h2>New Message</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Message:</b><br>${message}</p>
+        <p><b>Name:</b> ${safeName}</p>
+        <p><b>Email:</b> ${safeEmail}</p>
+        <p><b>Message:</b><br>${safeMessage}</p>
       `,
     });
 
@@ -397,12 +454,12 @@ app.get("/admin", checkAuth, async (req, res) => {
 });
 
 //MEDIA
-app.get("/admin/media", (req, res) => {
+app.get("/admin/media", checkAuth, (req, res) => {
   const files = fs.readdirSync("public/uploads");
   res.render("admin/media", { files });
 });
 
-app.post("/admin/media/delete/:name", (req, res) => {
+app.post("/admin/media/delete/:name", checkAuth, (req, res) => {
   const filePath = "public/uploads/" + req.params.name;
 
   if (fs.existsSync(filePath)) {
@@ -413,13 +470,13 @@ app.post("/admin/media/delete/:name", (req, res) => {
 });
 
 // comment
-app.get("/admin/comments", async (req, res) => {
+app.get("/admin/comments", checkAuth, async (req, res) => {
   const comments = await Comment.find().populate("post");
   res.render("admin/comments", { comments });
 });
 
 // DELETE COMMENT
-app.post("/admin/comments/delete/:id", async (req, res) => {
+app.post("/admin/comments/delete/:id", checkAuth, async (req, res) => {
   await Comment.findByIdAndDelete(req.params.id);
   res.redirect("/admin/comments");
 });
@@ -446,13 +503,21 @@ app.get("/admin/ads/new", checkAuth, (req, res) => {
   });
 });
 
-app.post("/admin/ads/new", uploadAd.single("image"), async (req, res) => {
+app.post("/admin/ads/new", checkAuth, uploadAd.single("image"), async (req, res) => {
   const { title, position, startDate, endDate, code, link } = req.body;
 
+const safeCode = sanitizeHtml(req.body.code, {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(["script", "ins"]),
+
+  allowedAttributes: {
+    "*": ["class", "style", "src", "async"],
+  },
+});
+  
   await Ad.create({
     title,
     position,
-    code, // still allow HTML ads
+    code: safeCode, // still allow HTML ads
     link,
     image: req.file ? req.file.filename : "",
     startDate,
@@ -487,40 +552,30 @@ app.use(async (req, res, next) => {
       if (!arr.length) return [];
       return [arr[Math.floor(Math.random() * arr.length)]];
     };
+
     res.locals.ads = {
-      header: pickRandom(
-        ads.filter((a) => a.position === "header")
-      ),
-      sidebar: pickRandom(
-        ads.filter((a) => a.position === "sidebar")
-      ),
-      footer: pickRandom(
-        ads.filter((a) => a.position === "footer")
-      ),
-      post: pickRandom(
-        ads.filter((a) => a.position === "post")
-      ),
+      header: pickRandom(ads.filter((a) => a.position === "header")),
+      sidebar: ads.filter((a) => a.position === "sidebar").slice(0, 3),
+      footer: pickRandom(ads.filter((a) => a.position === "footer")),
+      homepage: ads.filter((a) => a.position === "homepage"),
+      postHeader: pickRandom(ads.filter((a) => a.position === "post-header")),
+      postMiddle: pickRandom(ads.filter((a) => a.position === "post-middle")),
+      postFooter: pickRandom(ads.filter((a) => a.position === "post-footer")),
     };
     next();
   } catch (err) {
     console.log("Ads middleware error:", err);
     res.locals.ads = {
       header: [],
+      homepage: [],
       sidebar: [],
+      "post-header": [],
+      "post-middle": [],
+      "post-footer": [],
       footer: [],
       post: [],
     };
     next();
-  }
-});
-
-app.post("/admin/ads/delete/:id", async (req, res) => {
-  try {
-    await Ad.findByIdAndDelete(req.params.id);
-    res.redirect("/admin/ads");
-  } catch (err) {
-    console.error(err);
-    res.redirect("/admin/ads");
   }
 });
 
@@ -537,18 +592,50 @@ app.get("/admin/ads/edit/:id", checkAuth, async (req, res) => {
   }
 });
 
-app.post("/admin/ads/edit/:id", async (req, res) => {
-  const { title, position, code } = req.body;
+app.post(
+  "/admin/ads/edit/:id", checkAuth, uploadAd.single("image"),
 
-  await Ad.findByIdAndUpdate(req.params.id, {
-    title,
-    position,
-    code,
-  });
-  res.redirect("/admin/ads");
-});
+  async (req, res) => {
 
-app.post("/admin/ads/toggle/:id", async (req, res) => {
+    const safeCode = sanitizeHtml(req.body.code || "", {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["script", "ins"]),
+
+      allowedAttributes: {
+        "*": ["class", "style", "src", "async"],
+      },
+    });
+
+    const {
+      title,
+      position,
+      link,
+      startDate,
+      endDate,
+    } = req.body;
+
+    const update = {
+      title,
+      position,
+      code: safeCode,
+      link,
+      startDate,
+      endDate,
+    };
+
+    if (req.file) {
+      update.image = req.file.filename;
+    }
+
+    await Ad.findByIdAndUpdate(
+      req.params.id,
+      update,
+    );
+
+    res.redirect("/admin/ads");
+  },
+);
+
+app.post("/admin/ads/toggle/:id", checkAuth, async (req, res) => {
   try {
     const ad = await Ad.findById(req.params.id);
     if (!ad) {
@@ -572,10 +659,6 @@ app.get("/ad-click/:id", async (req, res) => {
   await ad.save();
 
   res.redirect(ad.link || "/");
-});
-
-app.get("/admin/create", checkAuth, (req, res) => {
-  res.render("create");
 });
 
 // ===== PAGE ====
@@ -639,7 +722,7 @@ app.get("/page/:slug", async (req, res) => {
 });
 
 // GET SETTINGS PAGE
-app.get("/admin/settings", async (req, res) => {
+app.get("/admin/settings", checkAuth, async (req, res) => {
   try {
     let setting = await Setting.findOne();
 
@@ -655,7 +738,7 @@ app.get("/admin/settings", async (req, res) => {
 });
 
 // SAVE SETTINGS
-app.post("/admin/settings", uploadPost.single("logo"), async (req, res) => {
+app.post("/admin/settings", checkAuth, uploadPost.single("logo"), async (req, res) => {
   try {
     let setting = await Setting.findOne();
 
@@ -737,9 +820,20 @@ function autoEmbed(content) {
 }
 
 // ===== CREATE POST =====
-app.post("/create", uploadPost.single("image"), async (req, res) => {
+app.post("/create", checkAuth, uploadPost.single("image"), async (req, res) => {
   console.log("POST HIT ✅");
   console.log(req.body);
+
+  const content = sanitizeHtml(req.body.content, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      "img",
+      "iframe",
+      "h1",
+      "h2",
+      "h3",
+    ]),
+  });
+
   let slug = req.body.slug;
 
   // AUTO GENERATE SLUG
@@ -794,7 +888,7 @@ app.post("/create", uploadPost.single("image"), async (req, res) => {
   await Post.create({
     title: req.body.title,
     slug,
-    content: autoEmbed(req.body.content),
+    content: autoEmbed(content),
     author: req.body.author,
     category: req.body.category,
     subCategory: req.body.subCategory,
@@ -862,7 +956,10 @@ app.get("/post/:slug", async (req, res) => {
 
     // 👇 increment views (optional but important for trending)
     post.views = (post.views || 0) + 1;
-    await post.save();
+    await Post.updateOne(
+      { _id: post._id },
+      { $inc: { views: 1 } },
+    );
 
     // get extras
     const comments = await Comment.find({ post: post._id });
@@ -891,28 +988,53 @@ app.get("/post/:slug", async (req, res) => {
     // =========================
     // 🔥 INSERT AD INTO CONTENT
     // =========================
-    let content = post.content;
+   let content = post.content;
 
-    if (res.locals.ads.post && res.locals.ads.post.length > 0) {
-      const ad = res.locals.ads.post[0];
+   if (res.locals.ads.postHeader && res.locals.ads.postHeader.length) {
+     const ad = res.locals.ads.postHeader[0];
+     const adHTML = ad.image
+       ? `<div class="post-ad">
+         <a href="/ad-click/${ad._id}">
+           <img src="/uploads/ads/${ad.image}">
+         </a>
+       </div>`
+       : `<div class="post-ad">${ad.code}</div>`;
+     content = adHTML + content;
+    }
+
+if (res.locals.ads.postMiddle && res.locals.ads.postMiddle.length) {
+  const ad = res.locals.ads.postMiddle[0];
+
+  const adHTML = ad.image
+    ? `<div class="post-ad">
+         <a href="/ad-click/${ad._id}">
+           <img src="/uploads/ads/${ad.image}">
+         </a>
+       </div>`
+    : `<div class="post-ad">${ad.code}</div>`;
+
+  let parts = content.split("</p>");
+
+  if (parts.length > 2) {
+    parts.splice(2, 0, adHTML);
+    content = parts.join("</p>");
+  }
+    }
+
+    if (res.locals.ads.postFooter && res.locals.ads.postFooter.length) {
+      const ad = res.locals.ads.postFooter[0];
 
       const adHTML = ad.image
         ? `<div class="post-ad">
-             <a href="${ad.link}">
-               <img src="/uploads/ads/${ad.image}" />
-             </a>
-           </div>`
+         <a href="/ad-click/${ad._id}">
+           <img src="/uploads/ads/${ad.image}">
+         </a>
+       </div>`
         : `<div class="post-ad">${ad.code}</div>`;
 
-      let parts = content.split("</p>");
-
-      if (parts.length > 2) {
-        parts.splice(2, 0, adHTML); // insert after 2nd paragraph
-      }
-
-      content = parts.join("</p>");
+      content += adHTML;
     }
-
+    
     // =========================
     // 🔥 SEND MODIFIED CONTENT
     // =========================
@@ -923,6 +1045,7 @@ app.get("/post/:slug", async (req, res) => {
       trending,
       related,
       sponsoredPosts,
+      homepage: res.locals.ads.homepage,
     });
   } catch (err) {
     console.log("❌ ERROR:", err);
@@ -937,6 +1060,17 @@ app.get("/edit/:id", checkAuth, async (req, res) => {
 });
 
 app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) => {
+
+  const content = sanitizeHtml(req.body.content, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      "img",
+      "iframe",
+      "h1",
+      "h2",
+      "h3",
+    ]),
+  });
+
   let slug = req.body.slug;
 
   // AUTO GENERATE SLUG
@@ -950,7 +1084,7 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
   const update = {
     title: req.body.title,
     slug,
-    content: autoEmbed(req.body.content),
+    content: autoEmbed(content),
     author: req.body.author,
     category: req.body.category,
     subCategory: req.body.subCategory,
@@ -1083,6 +1217,7 @@ app.get("/", async (req, res) => {
     smallFeatures,
     sponsoredPosts, // ✅ IMPORTANT
     categoryPosts,
+    homepage: res.locals.ads.homepage,
     currentPage: page,
     totalPages: Math.ceil(totalPosts / limit),
   });
@@ -1105,19 +1240,23 @@ app.post("/like/:slug", async (req, res) => {
 app.post("/comment", async (req, res) => {
   const { name, message, postId } = req.body;
 
+  const safeName = escape(name);
+  const safeMessage = escape(message);
+
   await Comment.create({
-    name,
-    message,
-    post: new mongoose.Types.ObjectId(postId), // VERY IMPORTANT
+    name: safeName,
+    message: safeMessage,
+    post: new mongoose.Types.ObjectId(postId),
   });
 
   const post = await Post.findById(postId);
+
   res.redirect("/post/" + post.slug);
 });
 
 // ===== SEARCH =====
 app.get("/search", async (req, res) => {
-  const q = req.query.q;
+  const q = req.query.q || "";
 
   const posts = await Post.find({
     $or: [
@@ -1149,7 +1288,7 @@ app.get("/category/:name", async (req, res) => {
 });
 
 
-// ===== SPORTS SUBCATEGORY =====
+// ===== SPORTS / SUBCATEGORY =====
 app.get("/sports/:type", async (req, res) => {
   try {
     const type = req.params.type.trim().toLowerCase();

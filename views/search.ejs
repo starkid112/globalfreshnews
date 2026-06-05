@@ -4,6 +4,10 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/style.css">
 
+    <% if(query){ %>
+    <link rel="canonical" href="https://globalfreshnews.com/category/<%= query %>">
+    <% } %>
+    
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined" ? post.title + " | " : "" %>
@@ -51,7 +55,7 @@
         <a href="/sports/Baseball">Baseball</a>
         <a href="/sports/Hockey">Hockey</a>
         <a href="/sports/Olympics">Olympics</a>
-        <a href="/sports/Motosport">Motosport</a>
+        <a href="/sports/Motorsport">Motorsport</a>
     </div>
 
     <!-- LEFT SIDE -->

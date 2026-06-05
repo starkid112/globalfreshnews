@@ -12,7 +12,7 @@
 
     <link rel="canonical" href="https://globalfreshnews.com/post/<%= post.slug %>">
 
-    <meta name="description" content="Latest Global News, Sports, Politics, Health Tech, Business, Markets, Entertainment, Lifestyle and Education">
+    <meta name="description" content="Latest <%= category %> news and updates from Global Fresh News">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta property="og:title" content="<%= post.title %>">
@@ -60,9 +60,12 @@
     },
     "publisher":{
     "@type":"Organization",
-    "name":"Global Fresh News"
+    "name":"Global Fresh News",
+    "logo":{
+    "@type":"ImageObject",
+    "url":"https://globalfreshnews.com/uploads/logo.png"
     }
-    }
+   }
     </script>
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -146,7 +149,7 @@
         <a href="/sports/Baseball">Baseball</a>
         <a href="/sports/Hockey">Hockey</a>
         <a href="/sports/Olympics">Olympics</a>
-        <a href="/sports/Motosport">Motosport</a>
+        <a href="/sports/Motorsport">Motorsport</a>
     </div>
 
     <!-- LEFT SIDE -->
@@ -251,11 +254,19 @@ async>
 
 
 <!-- HEADER ADS -->
-<% if (ads && ads.header) { %>
-  <% ads.header.forEach(ad => { %>
-    <div class="ad ad-header">
-      <%- ad.code %>
-    </div>
+<% if (ads && ads["post-header"]) { %>
+  <% ads["post-header"].forEach(ad => { %>
+      <div class="ad ad-post-header">
+      <% if(ad.image){ %>
+        <a href="/ad-click/<%= ad._id %>">
+          <img
+            src="/uploads/ads/<%= ad.image %>"
+            alt="<%= ad.title %>">
+        </a>
+      <% } else { %>
+        <%- ad.code %>
+      <% } %>
+      </div>
   <% }) %>
 <% } %>
 
@@ -292,10 +303,12 @@ async>
     By <%= post.author %>
 </p>
 
-<!-- ✅ CONTENT -->
+
+<!-- CONTENT -->
 <div class="post-content">
     <%- post.content %>
 </div>
+
 
 <!-- SHARE -->
 <div class="share-icon">
@@ -304,20 +317,24 @@ async>
        <i class="fab fa-whatsapp"></i>
     </a>
     <a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent('https://globalfreshnews.com/post/' + post.slug) %>" target="_blank">
+        rel="noopener noreferrer"
        <i class="fab fa-facebook-f"></i>
     </a>
     <a href="https://twitter.com/intent/tweet?url=<%= encodeURIComponent('https://globalfreshnews.com/post/' + post.slug) %>" target="_blank">
+        rel="noopener noreferrer"
        <i class="fab fa-x-twitter"></i>
     </a>
     <a href="https://t.me/share/url?url=<%= encodeURIComponent('https://globalfreshnews.com/post/' + post.slug) %>" target="_blank">
+        rel="noopener noreferrer"
        <i class="fab fa-telegram"></i>
     </a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%= encodeURIComponent('https://globalfreshnews.com/post/' + post.slug) %>"
-
    target="_blank">
+   rel="noopener noreferrer"
    <i class="fab fa-linkedin-in"></i>
     </a>
     <a href="https://pinterest.com/pin/create/button/?url=<%= encodeURIComponent('https://globalfreshnews.com/post/' + post.slug) %>&description=<%= encodeURIComponent(post.title) %>" target="_blank">
+        rel="noopener noreferrer"
        <i class="fab fa-pinterest-p"></i>
     </a>
     <a href="#" onclick="copyPostLink(event)" title="Copy Link">
@@ -329,22 +346,27 @@ async>
     <h3>Follow Us</h3>
 
     <a href="https://www.facebook.com/share/1CX81bifeY/?mibextid=wwXIfr" target="_blank">
+        rel="noopener noreferrer"
         <i class="fab fa-facebook-f"></i>
     </a>
 
     <a href="https://x.com/globalfreshnews?s=11" target="_blank">
+        rel="noopener noreferrer"
         <i class="fab fa-x-twitter"></i>
     </a>
 
     <a href="https://www.instagram.com/globalfreshnews?igsh=dXR6ajc4N21la2Rn&utm_source=qr" target="_blank">
+        rel="noopener noreferrer"
         <i class="fab fa-instagram"></i>
     </a>
 
     <a href="https://www.tiktok.com/@global_fresh_news?_r=1&_t=ZS-95NFCLdC7jV" target="_blank">
+        rel="noopener noreferrer"
         <i class="fab fa-tiktok"></i>
     </a>
 
     <a href="https://youtube.com/@globalfreshnews12?si=wKU70G0Aa44x7U7n" target="_blank">
+        rel="noopener noreferrer"
         <i class="fab fa-youtube"></i>
     </a>
 </div>
@@ -395,13 +417,32 @@ async>
 
 <hr>
 
+<% if (ads && ads.homepage) { %>
+  <% ads.homepage.forEach(ad => { %>
+      <div class="ad ad-homepage">
+      <% if(ad.image){ %>
+         <a href="/ad-click/<%= ad._id %>">
+           <img
+             src="/uploads/ads/<%= ad.image %>"
+             alt="<%= ad.title %>">
+         </a>
+      <% } else { %>
+         <%- ad.code %>
+      <% } %>
+      </div>
+  <% }) %>
+<% } %>
+
 <!-- ✅ RELATED POSTS (FIXED SLUG) -->
 <h3>Related Posts</h3>
 <div class="posts">
 <% related.forEach(r => { %>
     <div class="card">
         <% if (r.image) { %>
-            <img src="/uploads/<%= r.image %>">
+           <img
+           src="/uploads/<%= r.image %>"
+           alt="<%= r.title %>"
+           loading="lazy">
         <% } %>
         <div class="card-content">
             <h4>
@@ -413,6 +454,23 @@ async>
     </div>
 <% }) %>
 </div>
+
+<% if(ads && ads.homepage && ads.homepage.length){ %>
+<div class="homepage-sponsored">
+  <% ads.homepage.forEach(ad => { %>
+    <div class="sponsored-card">
+      <a href="/ad-click/<%= ad._id %>">
+        <img
+        src="/uploads/ads/<%= ad.image %>"
+        alt="<%= ad.title %>">
+        <h3><%= ad.title %></h3>
+        <p>Sponsored</p>
+        <button>Visit Website</button>
+      </a>
+    </div>
+  <% }) %>
+</div>
+<% } %>
 
 <!-- SPONSORED CONTENT -->
 <% if (sponsoredPosts && sponsoredPosts.length > 0) { %>
@@ -463,14 +521,24 @@ async>
     
     <!-- SIDEBAR ADS -->
     <div class="widget ad-box">
+
         <h3>Advertisement</h3>
-        <% if (ads && ads.sidebar) { %>
-          <% ads.sidebar.forEach(ad => { %>
-            <div class="ad ad-sidebar">
-              <%- ad.code %>
-            </div>
-          <% }) %>
-        <% } %>
+
+<% if (ads && ads.sidebar) { %>
+  <% ads.sidebar.forEach(ad => { %>
+    <div class="ad ad-sidebar-ad-item">
+      <% if(ad.image){ %>
+        <a href="/ad-click/<%= ad._id %>">
+          <img
+          src="/uploads/ads/<%= ad.image %>"
+          alt="<%= ad.title %>">
+        </a>
+      <% } else { %>
+        <%- ad.code %>
+      <% } %>
+    </div>
+  <% }) %>
+<% } %>
     </div>
 
     <!-- CATEGORIES -->
@@ -566,10 +634,20 @@ async>
 <% if (ads && ads.footer) { %>
   <% ads.footer.forEach(ad => { %>
     <div class="ad ad-footer">
-      <%- ad.code %>
+      <% if(ad.image){ %>
+        <a href="/ad-click/<%= ad._id %>">
+          <img
+          src="/uploads/ads/<%= ad.image %>"
+          alt="<%= ad.title %>">
+        </a>
+      <% } else { %>
+        <%- ad.code %>
+      <% } %>
     </div>
   <% }) %>
 <% } %>
+
+
 <!-- FOOTER -->
 <footer class="footer">
     <div class="footer-container">
@@ -592,7 +670,7 @@ async>
     </div>
 
      <div>
-      <img src="/images/logo.png" style="width:160px;">
+       <img src="/uploads/<%= setting.logo || 'logo.png' %>"> style="width:160px;">
       <p>Global Fresh News is a modern digital news platform committed to delivering accurate, timely, and engaging stories from around the world. We provide comprehensive coverage of global affairs, health, business, lifestyle, education, technology, sports, entertainment, breaking news, and trending topics, among many others.
 
       Driven by integrity and innovation, Global Fresh News connects readers to the pulse of the world offering insights that inform, inspire, and empower.</p>
@@ -640,7 +718,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!accepted) {
     banner.style.display = "flex";
   } else {
-    banner.style.display = "block";
+    banner.style.display = "none";
   }
 });
 
@@ -670,7 +748,7 @@ function toggleMenu() {
 
   // Change icon
   if (menu.classList.contains("active")) {
-    btn.innerHTML = "☰"; // X
+    btn.innerHTML = "✖"; // X
   } else {
     btn.innerHTML = "☰"; // menu
   }
