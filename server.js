@@ -507,11 +507,8 @@ app.post("/admin/ads/new", checkAuth, uploadAd.single("image"), async (req, res)
   const { title, position, startDate, endDate, code, link } = req.body;
 
 const safeCode = sanitizeHtml(req.body.code, {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(["script", "ins"]),
-
-  allowedAttributes: {
-    "*": ["class", "style", "src", "async"],
-  },
+  allowedTags: false,
+  allowedAttributes: false
 });
   
   await Ad.create({
@@ -548,6 +545,22 @@ app.use(async (req, res, next) => {
         },
       ],
     });
+
+    console.log("ADS FOUND:", ads.length);
+
+    ads.forEach((ad) => {
+      console.log(
+        "TITLE:",
+        ad.title,
+
+        "| POSITION:",
+        ad.position,
+
+        "| ACTIVE:",
+        ad.active,
+      );
+    });
+    
     const pickRandom = (arr) => {
       if (!arr.length) return [];
       return [arr[Math.floor(Math.random() * arr.length)]];
@@ -598,11 +611,9 @@ app.post(
   async (req, res) => {
 
     const safeCode = sanitizeHtml(req.body.code || "", {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["script", "ins"]),
+      allowedTags: false,
 
-      allowedAttributes: {
-        "*": ["class", "style", "src", "async"],
-      },
+      allowedAttributes: false
     });
 
     const {
