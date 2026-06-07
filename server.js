@@ -532,6 +532,12 @@ app.use(async (req, res, next) => {
     active: true
     });
 
+    app.get("/check-ads", async (req, res) => {
+      const ads = await Ad.find({});
+
+      res.json(ads);
+    });
+
     const pickRandom = (arr) => {
       if (!arr.length) return [];
       return [arr[Math.floor(Math.random() * arr.length)]];
