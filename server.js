@@ -528,37 +528,8 @@ const safeCode = sanitizeHtml(req.body.code, {
 app.use(async (req, res, next) => {
   try {
     const now = new Date();
-    const ads = await Ad.find({});
-
-    console.log("NOW:", now);
-    console.log("ADS FOUND:", ads.length);
-
-    ads.forEach((ad) => {
-      console.log({
-        title: ad.title,
-        active: ad.active,
-        startDate: ad.startDate,
-        endDate: ad.endDate,
-        position: ad.position,
-      });
-    });
-
-    console.log("ADS FOUND:", ads.length);
-
-    ads.forEach((ad) => {
-      console.log(
-        "TITLE:",
-        ad.title,
-        "| POSITION:",
-        ad.position,
-        "| ACTIVE:",
-        ad.active,
-      );
-    });
-
-    app.get("/debug-ads", async (req, res) => {
-      const ads = await Ad.find();
-      res.json(ads);
+    const ads = await Ad.find({
+    active: true
     });
 
     const pickRandom = (arr) => {

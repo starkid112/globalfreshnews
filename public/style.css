@@ -1464,6 +1464,22 @@ blockquote {
   cursor: pointer;
 }
 
+.dark-mode .sponsored-card {
+
+    background: #111;
+
+    border-color: #444;
+
+}
+
+.dark-mode .sponsored-card h3 {
+    color: #fff;
+}
+
+.dark-mode .sponsored-card p {
+    color: #ddd;
+}
+
 /* ADMIN CONTAINER */
 .admin-container {
   padding: 20px;
