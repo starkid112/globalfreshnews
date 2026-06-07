@@ -528,23 +528,7 @@ const safeCode = sanitizeHtml(req.body.code, {
 app.use(async (req, res, next) => {
   try {
     const now = new Date();
-    const ads = await Ad.find({
-      active: true,
-      $and: [
-        {
-          $or: [
-            { startDate: { $exists: false } },
-            { startDate: { $lte: now } },
-          ],
-        },
-        {
-          $or: [
-            { endDate: { $exists: false } },
-            { endDate: { $gte: now } },
-          ],
-        },
-      ],
-    });
+    const ads = await Ad.find({});
 
     console.log("NOW:", now);
     console.log("ADS FOUND:", ads.length);
