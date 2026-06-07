@@ -378,16 +378,18 @@ async>
                     <% if(post.isPinned) { %>
                        <span class="pin-badge">Pinned</span>
                     <% } %>
-
-                    <h3><%= post.title %></h3>
-
+                     <div class="sponsored-content-h3"  
+                       <h3><%= post.title %></h3>
+                     </div>    
                     <div class="sponsored-stats">
                         <span>👁 <%= post.views || 0 %></span>
                         <span>❤️ <%= post.likes || 0 %></span>
                     </div>
+                    <div class="sponsored-content-p"
                     <p>
                         <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 100) %>
                     </p>
+                    </div>
                 </div>
             </a>
         <% }) %>

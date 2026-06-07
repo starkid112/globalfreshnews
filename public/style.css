@@ -644,7 +644,7 @@ body.dark .search-box input {
     gap: 20px;
 }
 .sponsored-card{
-    background: var(--card-bg);
+    background: #1a1a1a;
     border: 2px solid gold;
     border-radius: 10px;
     overflow: hidden;
@@ -662,6 +662,16 @@ body.dark .search-box input {
 }
 .sponsored-content{
     padding: 15px;
+    color: #000814;
+}
+
+.dark-mode .sponsored-content-p p{
+    color: black;
+    background-color: black;
+}
+
+.dark-mode .sponsored-content-h3 h3{
+    color: #000;
 }
 .sponsored-badge{
     display: inline-block;
@@ -1449,11 +1459,12 @@ blockquote {
 .sponsored-card h3{
   padding: 10px;
   font-size: 18px;
+  color: #000;
 }
 
 .sponsored-card p{
   padding: 0 10px;
-  color: #888;
+  color: black;
 }
 
 .sponsored-card button{
@@ -1462,22 +1473,6 @@ blockquote {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-}
-
-.dark-mode .sponsored-card {
-
-    background: #111;
-
-    border-color: #444;
-
-}
-
-.dark-mode .sponsored-card h3 {
-    color: #fff;
-}
-
-.dark-mode .sponsored-card p {
-    color: #ddd;
 }
 
 /* ADMIN CONTAINER */
