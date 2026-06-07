@@ -132,8 +132,14 @@
 </div>
 
 <div style="margin-top:5px;">
-    <label>
-    <input type="checkbox" name="isPinned"> Pin Post To Homepage
+    <label for="isPinned">
+        <input
+            type="checkbox"
+            id="isPinned"
+            name="isPinned"
+            value="true"
+            <%= post && post.isPinned ? 'checked' : '' %>>
+        Pin Post To Homepage
     </label>
 </div>
 

@@ -7,14 +7,14 @@
     <% if(query){ %>
     <link rel="canonical" href="https://globalfreshnews.com/category/<%= query %>">
     <% } %>
-    
+
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined" ? post.title + " | " : "" %>
       <%= setting.siteName || "Global Fresh News" %>
     </title>
 
-    <meta name="description" content="Latest Global News, Sports, Politics, Health Tech, Business, Markets, Entertainment, Lifestyle and Education">
+    <meta name="description" content="Search Global Fresh News for the latest news, politics, business, sports, technology, entertainment and more.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -201,7 +201,7 @@
     </div>
 
      <div>
-      <img src="/images/logo.png" style="width:160px;">
+      <img src="/uploads/<%= setting.logo || 'logo.png' %>" style="width:160px;">
       <p>Global Fresh News is a modern digital news platform committed to delivering accurate, timely, and engaging stories from around the world. We provide comprehensive coverage of global affairs, health, business, lifestyle, education, technology, sports, entertainment, breaking news, and trending topics, among many others.
 
       Driven by integrity and innovation, Global Fresh News connects readers to the pulse of the world offering insights that inform, inspire, and empower.</p>
