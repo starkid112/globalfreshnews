@@ -392,17 +392,19 @@ app.get("/contact", (req, res) => {
 
 app.post("/contact", upload.none(), async (req, res) => {
   try {
-    console.log("BODY:", req.body); // debug
+    console.log("BODY:", req.body);
 
     const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.send("❌ All fields are required");
+    }
 
     const safeName = escape(name);
     const safeEmail = escape(email);
     const safeMessage = escape(message);
 
-    if (!name || !email || !message) {
-      return res.send("❌ All fields are required");
-    }
+    console.log("EMAIL =", process.env.EMAIL);
+    console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -414,13 +416,17 @@ app.post("/contact", upload.none(), async (req, res) => {
 
     await transporter.sendMail({
       from: process.env.EMAIL,
+
+      // ✅ Recipient (THIS WAS MISSING)
+      to: process.env.EMAIL,
       replyTo: email,
-      subject: "New Contact Message",
+      subject: `New Contact Message From ${safeName}`,
       html: `
-        <h2>New Message</h2>
-        <p><b>Name:</b> ${safeName}</p>
-        <p><b>Email:</b> ${safeEmail}</p>
-        <p><b>Message:</b><br>${safeMessage}</p>
+        <h2>New Contact Message</h2>
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> ${safeEmail}</p>
+        <p><strong>Message:</strong></p>
+        <p>${safeMessage}</p>
       `,
     });
 
