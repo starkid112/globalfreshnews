@@ -671,7 +671,7 @@ body.dark .search-box input {
 }
 
 .dark-mode .sponsored-content-h3 h3{
-    color: #000;
+    color: #9e9b9b;
 }
 .sponsored-badge{
     display: inline-block;
@@ -708,10 +708,59 @@ body.dark .sponsored-stats {
    font-weight: bold;
 }
 
-.market-widget{
+.ad-label{
+    display: inline-block;
+    background: #ff9800;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size:12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.ad-title{
+    font-size: 16px;
+    font-weight: 700;
+    margin: 8px 0 12px;
+    line-height: 1.5;
+}
+
+.ad img{
     width: 100%;
-    margin: 0;
+    max-width: 728px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.ad-post-middle,
+.ad-post-footer{
+    margin: 30px 0;
+    text-align: center;
+}
+
+.sponsored-card{
+    border: 1px solid #ddd;
+    border-radius: 10px;
     overflow: hidden;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.sponsored-card img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.sponsored-card button{
+    margin-top: 10px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .market-box{

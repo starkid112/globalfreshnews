@@ -228,10 +228,14 @@ async>
 
 
 <!-- HEADER ADS -->
-<% if (ads && ads.header) { %>
+<% if (ads && ads.header && ads.header.length) { %>
   <% ads.header.forEach(ad => { %>
     <div class="ad ad-header">
       <% if(ad.image){ %>
+        <div class="ad-label">Sponsored</div>
+        <h4 class="ad-title">
+          <%= ad.title %>
+        </h4>
         <a href="/ad-click/<%= ad._id %>">
           <img
             src="/uploads/ads/<%= ad.image %>"
@@ -253,22 +257,6 @@ async>
 
         <!-- FEATURED SECTION -->
         <div class="featured-wrapper">
-
-<% if (ads && ads.homepage) { %>
-  <% ads.homepage.forEach(ad => { %>
-      <div class="ad ad-homepage">
-      <% if(ad.image){ %>
-         <a href="/ad-click/<%= ad._id %>">
-           <img
-             src="/uploads/ads/<%= ad.image %>"
-             alt="<%= ad.title %>">
-         </a>
-      <% } else { %>
-         <%- ad.code %>
-      <% } %>
-      </div>
-  <% }) %>
-<% } %>
 
             <!-- BIG SLIDER -->
             <div class="hero-slider">
@@ -400,17 +388,24 @@ async>
    View More →
 </a>
 
+<!-- HOMEPAGE ADS -->
 <% if(ads && ads.homepage && ads.homepage.length){ %>
 <div class="homepage-sponsored">
   <% ads.homepage.forEach(ad => { %>
     <div class="sponsored-card">
       <a href="/ad-click/<%= ad._id %>">
         <img
-        src="/uploads/ads/<%= ad.image %>"
-        alt="<%= ad.title %>">
-        <h3><%= ad.title %></h3>
-        <p>Sponsored</p>
-        <button>Visit Website</button>
+          src="/uploads/ads/<%= ad.image %>"
+          alt="<%= ad.title %>">
+        <div class="ad-label">
+          Sponsored
+        </div>
+        <h3>
+          <%= ad.title %>
+        </h3>
+        <button>
+          Learn More
+        </button>
       </a>
     </div>
   <% }) %>
@@ -496,15 +491,19 @@ async>
 
         <h3>Advertisement</h3>
 
-<% if (ads && ads.sidebar) { %>
-
+<!-- SIDEBAR ADS -->
+<% if (ads && ads.sidebar && ads.sidebar.length) { %>
   <% ads.sidebar.forEach(ad => { %>
     <div class="ad ad-sidebar-ad-item">
       <% if(ad.image){ %>
+        <div class="ad-label">Sponsored</div>
+        <h4 class="ad-title">
+          <%= ad.title %>
+        </h4>
         <a href="/ad-click/<%= ad._id %>">
           <img
-          src="/uploads/ads/<%= ad.image %>"
-          alt="<%= ad.title %>">
+            src="/uploads/ads/<%= ad.image %>"
+            alt="<%= ad.title %>">
         </a>
       <% } else { %>
         <%- ad.code %>
@@ -582,6 +581,28 @@ async>
         </div>
     </div>
 
+
+   <!-- FOOTER ADS -->
+<% if (ads && ads.footer && ads.footer.length) { %>
+  <% ads.footer.forEach(ad => { %>
+    <div class="ad ad-footer">
+      <% if(ad.image){ %>
+        <div class="ad-label">Sponsored</div>
+        <h4 class="ad-title">
+          <%= ad.title %>
+        </h4>
+        <a href="/ad-click/<%= ad._id %>">
+          <img
+            src="/uploads/ads/<%= ad.image %>"
+            alt="<%= ad.title %>">
+        </a>
+      <% } else { %>
+        <%- ad.code %>
+      <% } %>
+    </div>
+  <% }) %>
+<% } %>
+
     <!-- LATEST UPDATE -->
   <div class="widget latest-widget">
     <div class="latest-header">
@@ -602,23 +623,6 @@ async>
   </div>
 </div>
 
-
-<!-- FOOTER ADS -->
-<% if (ads && ads.footer) { %>
-  <% ads.footer.forEach(ad => { %>
-    <div class="ad ad-footer">
-      <% if(ad.image){ %>
-        <a href="/ad-click/<%= ad._id %>">
-          <img
-          src="/uploads/ads/<%= ad.image %>"
-          alt="<%= ad.title %>">
-        </a>
-      <% } else { %>
-        <%- ad.code %>
-      <% } %>
-    </div>
-  <% }) %>
-<% } %>
 
 <!-- FOOTER -->
 <footer class="footer">
