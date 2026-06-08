@@ -436,6 +436,13 @@ app.post("/contact", upload.none(), async (req, res) => {
     res.send("❌ Error sending message");
   }
 });
+app.get("/check-env", (req, res) => {
+  res.json({
+    EMAIL: process.env.EMAIL || "NOT FOUND",
+
+    EMAIL_PASS: process.env.EMAIL_PASS ? "FOUND" : "NOT FOUND",
+  });
+});
 
 // ===== ADMIN CREATE PAGE =====
 app.get("/admin/create", checkAuth, (req, res) => {
