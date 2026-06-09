@@ -7,7 +7,7 @@
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined" ? post.title + " | " : "" %>
-      <%= setting.siteName || "Global Fresh News" %>
+      <%= setting.siteName || "Global Fresh News | Latest News, Sports, Politics, Business & Technology" %>
     </title>
 
     <link rel="canonical" href="https://globalfreshnews.com">
@@ -25,14 +25,26 @@
     content="https://globalfreshnews.com">
 
     <script type="application/ld+json">
-    {
-    "@context":"https://schema.org",
+{
+  "@context":"https://schema.org",
+  "@type":"NewsMediaOrganization",
+  "name":"Global Fresh News",
+  "url":"https://globalfreshnews.com",
+  "logo":{
+    "@type":"ImageObject",
+    "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>"
+  }
+}
+</script>
 
-    "@type":"NewsMediaOrganization",
-    "name":"Global Fresh News",
-    "url":"https://globalfreshnews.com"
-    }
-    </script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"Global Fresh News",
+  "url":"https://globalfreshnews.com"
+}
+</script>
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
@@ -369,10 +381,6 @@ async>
                      <div class="sponsored-content-h3"  
                        <h3><%= post.title %></h3>
                      </div>    
-                    <div class="sponsored-stats">
-                        <span>👁 <%= post.views || 0 %></span>
-                        <span>❤️ <%= post.likes || 0 %></span>
-                    </div>
                     <div class="sponsored-content-p"
                     <p>
                         <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 100) %>
@@ -431,11 +439,6 @@ async>
 
                 <p>
                   <%= post.metaDescription || post.content.replace(/<[^>]*>/g, '').substring(0, 120) %>
-                </p>
-
-                <p>
-                    👁 <%= post.views || 0 %> |
-                    ❤️ <%= post.likes || 0 %>
                 </p>
 
                 <small>
