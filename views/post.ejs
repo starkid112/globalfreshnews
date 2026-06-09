@@ -6,8 +6,9 @@
 
     <!-- ✅ DYNAMIC TITLE -->
     <title>
-      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
-      <%= setting.siteName || "<%= post.title %> | Global Fresh News" %>
+      <%= typeof post !== "undefined"
+      ? post.title + " | Global Fresh News"
+      : (setting.siteName || "Global Fresh News") %>
     </title>
 
     <link rel="canonical" href="https://globalfreshnews.com/post/<%= post.slug %>">
@@ -63,7 +64,7 @@
     "name":"Global Fresh News",
     "logo":{
       "@type":"ImageObject",
-      "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png"
+      "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>".
     }
   }
 }

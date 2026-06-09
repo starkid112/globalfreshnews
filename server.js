@@ -167,7 +167,7 @@ app.use(
     }),
 
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       httpOnly: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
@@ -463,6 +463,48 @@ app.get("/admin", checkAuth, async (req, res) => {
     posts = await Post.find().sort({ createdAt: -1 }); // ✅ FIXED
   }
 
+const totalViews = await Post.aggregate([
+  {
+    $group: {
+      _id: null,
+
+      total: { $sum: "$views" },
+    },
+  },
+]);
+
+const totalLikes = await Post.aggregate([
+  {
+    $group: {
+      _id: null,
+
+      total: { $sum: "$likes" },
+    },
+  },
+]);
+
+const topPost = await Post.findOne()
+  .sort({ views: -1 });
+const topCategory = await Post.aggregate([
+  {
+    $group: {
+      _id: "$category",
+
+      totalViews: {
+        $sum: "$views",
+      },
+    },
+  },
+  {
+    $sort: {
+      totalViews: -1,
+    },
+  },
+  {
+    $limit: 1,
+  },
+]);
+  
   res.render("admin", { posts, query });
 });
 
