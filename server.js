@@ -462,61 +462,92 @@ app.get("/admin", checkAuth, async (req, res) => {
   } else {
     posts = await Post.find().sort({ createdAt: -1 }); // ✅ FIXED
   }
-
-const totalViews = await Post.aggregate([
-  {
-    $group: {
-      _id: null,
-
-      total: { $sum: "$views" },
-    },
-  },
-]);
-
-const totalLikes = await Post.aggregate([
-  {
-    $group: {
-      _id: null,
-
-      total: { $sum: "$likes" },
-    },
-  },
-]);
-
-const topPost = await Post.findOne()
-  .sort({ views: -1 });
-const topCategory = await Post.aggregate([
-  {
-    $group: {
-      _id: "$category",
-
-      totalViews: {
-        $sum: "$views",
-      },
-    },
-  },
-  {
-    $sort: {
-      totalViews: -1,
-    },
-  },
-  {
-    $limit: 1,
-  },
-]);
   
   res.render("admin", {
     posts,
+    query
+  });
+});
 
-    query,
+app.get("/analytics", checkAuth, async (req, res) => {
+  const topPosts = await Post.find()
+    .sort({ views: -1 })
+    .limit(10);
+  const totalPosts = await Post.countDocuments();
 
+  const totalViews = await Post.aggregate([
+    {
+      $group: {
+        _id: null,
+
+        total: { $sum: "$views" },
+      },
+    },
+  ]);
+
+  const totalLikes = await Post.aggregate([
+    {
+      $group: {
+        _id: null,
+
+        total: { $sum: "$likes" },
+      },
+    },
+  ]);
+
+  const topPost = await Post.findOne().sort({ views: -1 });
+  const topCategory = await Post.aggregate([
+    {
+      $group: {
+        _id: "$category",
+
+        totalViews: {
+          $sum: "$views",
+        },
+      },
+    },
+    {
+      $sort: {
+        totalViews: -1,
+      },
+    },
+    {
+      $limit: 1,
+    },
+  ]);
+  
+  const latestPosts = await Post.find()
+    .sort({ createdAt: -1 })
+    .limit(10);
+
+  const topCategories = await Post.aggregate([
+    {
+      $group: {
+        _id: "$category",
+        views: { $sum: "$views" },
+      },
+    },
+
+    {
+      $sort: {
+        views: -1,
+      },
+    },
+
+    {
+      $limit: 5,
+    },
+  ]);
+
+  res.render("analytics", {
     totalViews: totalViews[0]?.total || 0,
-
     totalLikes: totalLikes[0]?.total || 0,
-
     topPost,
-
     topCategory: topCategory[0]?._id || "None",
+    topPosts,
+    topCategories,
+    totalPosts,
+    latestPosts,
   });
 });
 

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ✅ DYNAMIC TITLE -->
+    <title>
+      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
+      <%= setting.siteName || "Global Fresh News" %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body{
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1{
+      margin-bottom: 20px;
+    }
+
+    .card{
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,.1);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th{
+      background: #222;
+      color: white;
+    }
+
+    a{
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+    </div>
+
+    <div class="nav-right">
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="admin-container">
+
+<h1>Website Analytics</h1>
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>Total Views</h3>
+    <p>
+      <%= totalViews %>
+    </p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Total Likes</h3>
+    <p>
+      <%= totalLikes %>
+    </p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Top Article</h3>
+    <p>
+      <%= topPost ? topPost.title : "None" %>
+    </p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Top Category</h3>
+    <p>
+      <%= topCategory %>
+    </p>
+  </div>
+</div>
+  
+<div class="card">
+  <h2>Total Posts</h2>
+  <h1><%= totalPosts %></h1>
+</div>
+
+<div class="card">
+<h2>Top 10 Most Viewed Articles</h2>
+
+<table>
+<tr>
+  <th>#</th>
+  <th>Title</th>
+  <th>Views</th>
+  <th>Likes</th>
+</tr>
+<% topPosts.forEach((post,index)=>{ %>
+<tr>
+<td><%= index + 1 %></td>
+<td>
+<a href="/post/<%= post.slug %>" target="_blank">
+<%= post.title %>
+</a>
+</td>
+
+<td><%= post.views || 0 %></td>
+<td><%= post.likes || 0 %></td>
+</tr>
+<% }) %>
+</table>
+</div>
+
+<div class="card">
+<h2>Top 5 Categories</h2>
+<table>
+<tr>
+
+<th>Category</th>
+<th>Total Views</th>
+</tr>
+
+<% topCategories.forEach(cat=>{ %>
+<tr>
+<td><%= cat._id %></td>
+<td><%= cat.views %></td>
+</tr>
+<% }) %>
+</table>
+</div>
+
+<div class="card">
+<h2>Latest 10 Posts</h2>
+<table>
+<tr>
+  <th>Title</th>
+  <th>Date</th>
+</tr>
+<% latestPosts.forEach(post => { %>
+<tr>
+<td>
+<a href="/post/<%= post.slug %>" target="_blank">
+<%= post.title %>
+</a>
+</td>
+<td>
+<%= new Date(post.createdAt).toDateString() %>
+</td>
+</tr>
+<% }) %>
+</table>
+</div>
+
+</body>
+</html>
