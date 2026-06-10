@@ -465,7 +465,8 @@ app.get("/admin", checkAuth, async (req, res) => {
   
   res.render("admin", {
     posts,
-    query
+    query,
+    setting
   });
 });
 
