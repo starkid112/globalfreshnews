@@ -31,7 +31,35 @@
 
     <h1 class="title">Admin Dashboard</h1>
 
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>Total Views</h3>
+    <p>
+      <%= totalViews %>
+    </p>
+  </div>
 
+  <div class="stat-card">
+    <h3>Total Likes</h3>
+    <p>
+      <%= totalLikes %>
+    </p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Top Article</h3>
+    <p>
+      <%= topPost ? topPost.title : "None" %>
+    </p>
+  </div>
+
+  <div class="stat-card">
+    <h3>Top Category</h3>
+    <p>
+      <%= topCategory %>
+    </p>
+  </div>
+</div>
 
 <ul class="admin-menu">
     <li><a href="/admin/pages">Pages</a></li>

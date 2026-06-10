@@ -505,7 +505,19 @@ const topCategory = await Post.aggregate([
   },
 ]);
   
-  res.render("admin", { posts, query });
+  res.render("admin", {
+    posts,
+
+    query,
+
+    totalViews: totalViews[0]?.total || 0,
+
+    totalLikes: totalLikes[0]?.total || 0,
+
+    topPost,
+
+    topCategory: topCategory[0]?._id || "None",
+  });
 });
 
 //MEDIA
