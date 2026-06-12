@@ -630,12 +630,6 @@ app.use(async (req, res, next) => {
     active: true
     });
 
-    app.get("/check-ads", async (req, res) => {
-      const ads = await Ad.find({});
-
-      res.json(ads);
-    });
-
     const pickRandom = (arr) => {
       if (!arr.length) return [];
       return [arr[Math.floor(Math.random() * arr.length)]];
@@ -643,9 +637,23 @@ app.use(async (req, res, next) => {
 
     res.locals.ads = {
       header: pickRandom(ads.filter((a) => a.position === "header")),
-      sidebar: ads.filter((a) => a.position === "sidebar").slice(0, 3),
+      sidebar: ads.filter((a) => a.position === "sidebar").slice(0, 5),
       footer: pickRandom(ads.filter((a) => a.position === "footer")),
+
       homepage: ads.filter((a) => a.position === "homepage"),
+
+      homepageSlot1: ads.filter((a) => a.position === "homepage-slot1"),
+      homepageSlot2: ads.filter((a) => a.position === "homepage-slot2"),
+      homepageSlot3: ads.filter((a) => a.position === "homepage-slot3"),
+      homepageSlot4: ads.filter((a) => a.position === "homepage-slot4"),
+      homepageSlot5: ads.filter((a) => a.position === "homepage-slot5"),
+
+      categorySlot1: ads.filter((a) => a.position === "category-slot1"),
+      categorySlot2: ads.filter((a) => a.position === "category-slot2"),
+      categorySlot3: ads.filter((a) => a.position === "category-slot3"),
+      categorySlot4: ads.filter((a) => a.position === "category-slot4"),
+      categorySlot5: ads.filter((a) => a.position === "category-slot5"),
+
       postHeader: pickRandom(ads.filter((a) => a.position === "post-header")),
       postMiddle: pickRandom(ads.filter((a) => a.position === "post-middle")),
       postFooter: pickRandom(ads.filter((a) => a.position === "post-footer")),
@@ -656,6 +664,19 @@ app.use(async (req, res, next) => {
     res.locals.ads = {
       header: [],
       homepage: [],
+
+      homepageSlot1: [],
+      homepageSlot2: [],
+      homepageSlot3: [],
+      homepageSlot4: [],
+      homepageSlot5: [],
+
+      categorySlot1: [],
+      categorySlot2: [],
+      categorySlot3: [],
+      categorySlot4: [],
+      categorySlot5: [],
+
       sidebar: [],
       "post-header": [],
       "post-middle": [],
@@ -687,7 +708,6 @@ app.post(
 
     const safeCode = sanitizeHtml(req.body.code || "", {
       allowedTags: false,
-
       allowedAttributes: false
     });
 
@@ -1103,9 +1123,14 @@ if (res.locals.ads.postMiddle && res.locals.ads.postMiddle.length) {
 
   if (parts.length > 2) {
     parts.splice(2, 0, adHTML);
-    content = parts.join("</p>");
   }
-    }
+
+  if (parts.length > 5) {
+    parts.splice(5, 0, adHTML);
+  }
+
+  content = parts.join("</p>");
+}
 
     if (res.locals.ads.postFooter && res.locals.ads.postFooter.length) {
       const ad = res.locals.ads.postFooter[0];
@@ -1366,6 +1391,7 @@ app.get("/category/:name", async (req, res) => {
     res.render("search", {
       posts,
       query: capitalizeWords(raw), // ✅ FIX HERE
+      ads: res.locals.ads
     });
   } catch (err) {
     console.error(err);
@@ -1388,6 +1414,7 @@ app.get("/sports/:type", async (req, res) => {
     res.render("search", {
       posts,
       query: capitalizeWords(type),
+      ads: res.locals.ads
     });
   } catch (err) {
     console.error(err);

@@ -307,7 +307,7 @@ async>
 
 <!-- CATEGORY + POSTS -->
 <% if (categoryPosts) { %>
-  <% Object.keys(categoryPosts).forEach(cat => { %>
+  <% Object.keys(categoryPosts).forEach((cat,index) => { %>
 
     <h2 class="section-title"><%= cat %></h2>
 
@@ -355,6 +355,34 @@ async>
     </div>
 
     <a href="/category/<%= cat %>" class="view-more">View More →</a>
+
+   <%
+let ad = null;
+if ((index + 1) === 2 && ads.homepageSlot1?.length)
+  ad = ads.homepageSlot1[0];
+else if ((index + 1) === 4 && ads.homepageSlot2?.length)
+  ad = ads.homepageSlot2[0];
+else if ((index + 1) === 6 && ads.homepageSlot3?.length)
+  ad = ads.homepageSlot3[0];
+else if ((index + 1) === 8 && ads.homepageSlot4?.length)
+  ad = ads.homepageSlot4[0];
+else if ((index + 1) === 10 && ads.homepageSlot5?.length)
+  ad = ads.homepageSlot5[0];
+if(ad){
+%>
+
+<div class="category-ad">
+  <% if (ad.image) { %>
+    <a href="/ad-click/<%= ad._id %>">
+      <img
+        src="/uploads/ads/<%= ad.image %>"
+        alt="<%= ad.title %>">
+    </a>
+  <% } else { %>
+    <%- ad.code %>
+  <% } %>
+</div>
+<% } %>
     <hr>
 
   <% }) %>

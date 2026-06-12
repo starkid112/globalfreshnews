@@ -1301,6 +1301,17 @@ body.dark .contact-form {
     font-weight: bold;
 }
 
+.category-ad{
+  margin: 25px 0;
+  text-align: center;
+}
+
+.category-ad img{
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 /* ================= SKELETON ================= */
 .skeleton {
     height: 200px;

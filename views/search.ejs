@@ -5,13 +5,12 @@
     <link rel="stylesheet" href="/style.css">
 
     <% if(query){ %>
-    <link rel="canonical" href="https://globalfreshnews.com/category/<%= query %>">
+    <link rel="canonical" href="https://globalfreshnews.com/search?q=<%= query %>">
     <% } %>
 
     <!-- ✅ DYNAMIC TITLE -->
     <title>
-      <%= typeof post !== "undefined" ? post.title + " | " : "" %>
-      <%= setting.siteName || "Search | Global Fresh News" %>
+      Search Results | <%= setting.siteName || "Global Fresh News" %>
     </title>
 
     <meta name="description" content="Search Global Fresh News for the latest news, politics, business, sports, technology, entertainment and more.">
@@ -127,48 +126,116 @@
 <% if (!posts || posts.length === 0) { %>
 
     <div class="empty-state">
+
         <h2>No results found</h2>
+
     </div>
 
 <% } else { %>
 
 <div class="posts">
 
-<% posts.forEach(post => { %>
+<% posts.forEach((post,index) => { %>
+
     <div class="card">
 
         <% if (post.image) { %>
+
             <img src="/uploads/<%= post.image %>">
+
         <% } %>
 
         <div class="card-content">
 
             <h3>
+
                 <a href="/post/<%= post.slug ? post.slug.trim().toLowerCase() : '' %>">
+
                     <%= post.title %>
+
                 </a>
+
             </h3>
 
             <p>
+
                 <%= post.content
+
                     ? post.content.replace(/<[^>]*>/g, "").substring(0, 100)
+
                     : "" %>...
+
             </p>
 
             <small>
+
                 <%= post.category %> |
+
                 <%= new Date(post.createdAt).toDateString() %>
+
             </small>
 
         </div>
 
     </div>
+
+    <%
+
+    let ad = null;
+
+    if ((index + 1) === 3 && ads?.categorySlot1?.length)
+
+        ad = ads.categorySlot1[0];
+
+    else if ((index + 1) === 6 && ads?.categorySlot2?.length)
+
+        ad = ads.categorySlot2[0];
+
+    else if ((index + 1) === 9 && ads?.categorySlot3?.length)
+
+        ad = ads.categorySlot3[0];
+
+    else if ((index + 1) === 12 && ads?.categorySlot4?.length)
+
+        ad = ads.categorySlot4[0];
+
+    else if ((index + 1) === 15 && ads?.categorySlot5?.length)
+
+        ad = ads.categorySlot5[0];
+
+    %>
+
+    <% if (ad) { %>
+
+        <div class="category-ad">
+
+            <% if (ad.image) { %>
+
+                <a href="/ad-click/<%= ad._id %>">
+
+                    <img
+
+                        src="/uploads/ads/<%= ad.image %>"
+
+                        alt="<%= ad.title %>">
+
+                </a>
+
+            <% } else { %>
+
+                <%- ad.code %>
+
+            <% } %>
+
+        </div>
+
+    <% } %>
+
 <% }) %>
 
 </div>
 
 <% } %>
-
 
 <!-- FOOTER ADS -->
 <% if (ads && ads.footer) { %>
