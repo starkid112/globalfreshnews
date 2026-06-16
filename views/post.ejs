@@ -4,6 +4,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/style.css">
 
+    <%- include("partials/google-analytics") %>
+
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined"
@@ -45,26 +47,34 @@
     <link rel="stylesheet" 
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <script type="application/ld+json">
+ <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"NewsArticle",
-  "headline":"<%= post.title %>",
+  "mainEntityOfPage": {
+    "@type":"WebPage",
+    "@id":"https://globalfreshnews.com/post/<%= post.slug %>"
+  },
+  "headline":"<%= post.title.replace(/"/g, '&quot;') %>",
+  "description":"<%= (post.metaDescription || post.title).replace(/"/g, '&quot;') %>",
   "image":[
     "https://globalfreshnews.com/uploads/<%= post.image %>"
   ],
-  "datePublished":"<%= post.createdAt %>",
-  "dateModified":"<%= post.updatedAt || post.createdAt %>",
+  "datePublished":"<%= new Date(post.createdAt).toISOString() %>",
+  "dateModified":"<%= new Date(post.updatedAt || post.createdAt).toISOString() %>",
   "author":{
     "@type":"Person",
     "name":"<%= post.author %>"
   },
   "publisher":{
     "@type":"Organization",
+    "@id": "https://globalfreshnews.com/#organization",
     "name":"Global Fresh News",
     "logo":{
       "@type":"ImageObject",
-      "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>"
+      "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>",
+      "width": 512,
+      "height": 512
     }
   }
 }
@@ -763,23 +773,20 @@ async>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("cookie-banner");
-
-  // CHECK COOKIE
-  const accepted = document.cookie
-    .split("; ")
-    .find(row => row.startsWith("cookiesAccepted="));
-
-  // SHOW ONLY IF NOT ACCEPTED
-  if (!accepted) {
-    banner.style.display = "flex";
-  } else {
+  
+  // Check cookie the simple way
+  if (document.cookie.includes("cookiesAccepted=true")) {
     banner.style.display = "none";
+  } else {
+    banner.style.display = "flex";
   }
 });
 
 function acceptCookies() {
-  document.cookie =
-    "cookiesAccepted=true; max-age=31536000; path=/";
+  // Tell server to set cookie properly
+  fetch('/accept-cookies', { method: 'POST' });
+  
+  // Hide banner immediately so user doesn't see flash
   document.getElementById("cookie-banner").style.display = "none";
 }
 </script>

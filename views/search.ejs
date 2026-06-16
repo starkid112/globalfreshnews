@@ -4,8 +4,10 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/style.css">
 
+    <%- include("partials/google-analytics") %>
+
     <% if(query){ %>
-    <link rel="canonical" href="https://globalfreshnews.com/search?q=<%= query %>">
+    <meta name="robots" content="noindex,follow">
     <% } %>
 
     <!-- ✅ DYNAMIC TITLE -->

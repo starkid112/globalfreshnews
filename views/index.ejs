@@ -4,6 +4,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/style.css">
 
+    <%- include("partials/google-analytics") %>
+
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined" ? post.title + " | " : "" %>
@@ -24,16 +26,27 @@
     <meta property="og:url"
     content="https://globalfreshnews.com">
 
-    <script type="application/ld+json">
+  <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"NewsMediaOrganization",
+  "@id": "https://globalfreshnews.com/#organization",
   "name":"Global Fresh News",
+  "alternateName":"GFN",
   "url":"https://globalfreshnews.com",
   "logo":{
     "@type":"ImageObject",
-    "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>"
-  }
+    "url":"https://globalfreshnews.com/uploads/<%= setting.logo || 'logo.png' %>",
+    "width": 512,
+    "height": 512
+  },
+  "sameAs": [
+    "https://www.facebook.com/share/1CX81bifeY/",
+    "https://x.com/globalfreshnews",
+    "https://www.instagram.com/globalfreshnews",
+    "https://www.tiktok.com/@global_fresh_news",
+    "https://youtube.com/@globalfreshnews12"
+  ]
 }
 </script>
 
@@ -766,27 +779,24 @@ function googleTranslateElementInit() {
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+function checkCookieBanner() {
   const banner = document.getElementById("cookie-banner");
-
-  // CHECK COOKIE
-  const accepted = document.cookie
-    .split("; ")
-    .find(row => row.startsWith("cookiesAccepted="));
-
-  // SHOW ONLY IF NOT ACCEPTED
-  if (!accepted) {
-    banner.style.display = "flex";
-  } else {
+  if (!banner) return;
+  
+  if (document.cookie.indexOf("gf_ok=1") !== -1) {
     banner.style.display = "none";
+  } else {
+    banner.style.display = "flex";
   }
-});
+}
 
 function acceptCookies() {
-  document.cookie =
-    "cookiesAccepted=true; max-age=31536000; path=/";
+  fetch('/accept-cookies', {method: 'POST'});
   document.getElementById("cookie-banner").style.display = "none";
 }
+
+// Run after page loads
+window.addEventListener('load', checkCookieBanner);
 </script>
 
 <script>

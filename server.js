@@ -5,7 +5,6 @@ if (!process.env.SESSION_SECRET) {
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
@@ -149,7 +148,6 @@ const uploadAd = multer({
 });
 
 // ===== MIDDLEWARE =====
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
@@ -167,13 +165,29 @@ app.use(
     }),
 
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
+      domain: ".globalfreshnews.com",
     },
   }),
 );
+
+// ===== COOKIE BANNER ROUTE =====
+app.post('/accept-cookies', (req, res) => {
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  
+  res.cookie('gf_ok', '1', {
+    httpOnly: false,           // JS needs to read this
+    sameSite: 'Lax',
+    secure: isHttps,           // true on https://globalfreshnews.com
+    path: '/',
+    domain: '.globalfreshnews.com'
+    // NO maxAge = dies when browser closes
+  });
+  res.send('ok');
+});
 
 // ===== AUTH =====
 function checkAuth(req, res, next) {
@@ -285,9 +299,13 @@ app.post("/forgot-password", async (req, res) => {
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    admin.resetToken = token;
-    admin.resetTokenExpire = Date.now() + 3600000; // 1 hour
-    await admin.save();
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    admin.resetToken = hashedToken;
+    admin.resetTokenExpire = Date.now() + 3600000;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -323,8 +341,13 @@ app.post("/forgot-password", async (req, res) => {
 // ===== UPDATE PASSWORD =====
 // ===== RESET PASSWORD =====
 app.get("/reset-password/:token", async (req, res) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
   const admin = await Admin.findOne({
-    resetToken: req.params.token,
+    resetToken: hashedToken,
     resetTokenExpire: { $gt: Date.now() },
   });
 
@@ -337,8 +360,13 @@ app.get("/reset-password/:token", async (req, res) => {
 
 app.post("/reset-password/:token", async (req, res) => {
   try {
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
     const admin = await Admin.findOne({
-      resetToken: req.params.token,
+      resetToken: hashedToken,
       resetTokenExpire: { $gt: Date.now() },
     });
 
@@ -436,13 +464,6 @@ app.post("/contact", upload.none(), async (req, res) => {
     res.send("❌ Error sending message");
   }
 });
-app.get("/check-env", (req, res) => {
-  res.json({
-    EMAIL: process.env.EMAIL || "NOT FOUND",
-
-    EMAIL_PASS: process.env.EMAIL_PASS ? "FOUND" : "NOT FOUND",
-  });
-});
 
 // ===== ADMIN CREATE PAGE =====
 app.get("/admin/create", checkAuth, (req, res) => {
@@ -539,6 +560,67 @@ app.get("/analytics", checkAuth, async (req, res) => {
     },
   ]);
 
+  const missingMeta = await Post.countDocuments({
+    $or: [{ metaDescription: { $exists: false } }, { metaDescription: "" }],
+  });
+
+  const missingImage = await Post.countDocuments({
+    $or: [{ image: { $exists: false } }, { image: "" }, { image: null }],
+  });
+
+  const missingAlt = await Post.countDocuments({
+    $or: [{ altText: { $exists: false } }, { altText: "" }],
+  });
+
+  const totalIndexedContent = await Post.countDocuments();
+
+  const sponsoredCount = await Post.countDocuments({
+    sponsored: true,
+  });
+
+  const breakingCount = await Post.countDocuments({
+    isBreaking: true,
+  });
+
+  const postsMissingMeta = await Post.find({
+    $or: [{ metaDescription: "" }, { metaDescription: null }],
+  })
+    .select("title slug createdAt")
+    .limit(10);
+
+  const postsMissingAlt = await Post.find({
+    $or: [{ altText: "" }, { altText: null }],
+  })
+    .select("title slug createdAt")
+    .limit(10);
+
+  const postsMissingImage = await Post.find({
+    $or: [{ image: "" }, { image: null }],
+  })
+    .select("title slug createdAt")
+    .limit(10);
+  
+  const latestPostsWithSEO = await Post.find()
+    .sort({ createdAt: -1 })
+    .limit(20);
+  
+  const scoredPosts = latestPostsWithSEO.map((post) => {
+    let score = 100;
+
+    if (!post.metaDescription) score -= 20;
+    if (!post.image) score -= 20;
+    if (!post.altText) score -= 10;
+    if (!post.keywords) score -= 10;
+    if ((post.title || "").length < 30) score -= 10;
+    if ((post.metaDescription || "").length < 100) score -= 10;
+
+    return {
+      title: post.title,
+      slug: post.slug,
+      score,
+    };
+  });
+
   res.render("analytics", {
     totalViews: totalViews[0]?.total || 0,
     totalLikes: totalLikes[0]?.total || 0,
@@ -548,6 +630,16 @@ app.get("/analytics", checkAuth, async (req, res) => {
     topCategories,
     totalPosts,
     latestPosts,
+    missingMeta,
+    missingImage,
+    missingAlt,
+    totalIndexedContent,
+    sponsoredCount,
+    breakingCount,
+    postsMissingMeta,
+    postsMissingAlt,
+    postsMissingImage,
+    scoredPosts
   });
 });
 
@@ -626,8 +718,10 @@ const safeCode = sanitizeHtml(req.body.code, {
 app.use(async (req, res, next) => {
   try {
     const now = new Date();
+
     const ads = await Ad.find({
-    active: true
+      active: true,
+    
     });
 
     const pickRandom = (arr) => {
@@ -1008,6 +1102,7 @@ app.post("/create", checkAuth, uploadPost.single("image"), async (req, res) => {
     sponsored: req.body.sponsored === "on",
     isPinned: req.body.isPinned === "on",
     pinnedUntil: req.body.pinnedUntil ? new Date(req.body.pinnedUntil) : null,
+    status: req.body.status || "published",
   });
   res.redirect("/admin");
 });
@@ -1056,12 +1151,14 @@ app.get("/post/:slug", async (req, res) => {
   try {
     const slug = req.params.slug.trim().toLowerCase();
 
-    const post = await Post.findOne({ slug });
+    const post = await Post.findOne({
+      slug,
+      status: "published",
+    });
 
     if (!post) return res.send("❌ Post not found");
 
     // 👇 increment views (optional but important for trending)
-    post.views = (post.views || 0) + 1;
     await Post.updateOne(
       { _id: post._id },
       { $inc: { views: 1 } },
@@ -1207,9 +1304,8 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
     keywords: req.body.keywords,
     sponsored: req.body.sponsored === "on",
     isPinned: req.body.isPinned === "on",
-    pinnedUntil: req.body.pinnedUntil
-      ? new Date(req.body.pinnedUntil)
-      : null,
+    pinnedUntil: req.body.pinnedUntil ? new Date(req.body.pinnedUntil) : null,
+    status: req.body.status || "published",
   };
   if (req.file) {
     update.image = req.file.filename;
@@ -1219,7 +1315,7 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
 });
 
 // ===== DELETE =====
-app.get("/delete/:id", checkAuth, async (req, res) => {
+app.post("/delete/:id", checkAuth, async (req, res) => {
   await Post.findByIdAndDelete(req.params.id);
   res.redirect("/admin");
 });
@@ -1240,12 +1336,16 @@ app.get("/", async (req, res) => {
   );
 
   // ✅ FETCH DATA
-  const postsRaw = await Post.find()
+  const postsRaw = await Post.find({
+    status: "published",
+  })
     .sort({ isPinned: -1, createdAt: -1 })
     .skip((page - 1) * limit)
     .limit(limit);
 
-  const trendingRaw = await Post.find()
+  const trendingRaw = await Post.find({
+    status: "published",
+  })
     .sort({ isPinned: -1, views: -1, createdAt: -1 })
     .limit(10);
 
@@ -1258,12 +1358,14 @@ app.get("/", async (req, res) => {
 
   const bigRaw = await Post.find({
     featureType: "big",
+    status: "published",
   })
     .sort({ isPinned: -1, createdAt: -1 })
     .limit(10);
 
   const smallRaw = await Post.find({
     featureType: "small",
+    status: "published",
   })
     .sort({ isPinned: -1, createdAt: -1 })
     .limit(4);
@@ -1271,6 +1373,7 @@ app.get("/", async (req, res) => {
   // ✅ SPONSORED POSTS
   const sponsoredRaw = await Post.find({
     sponsored: true,
+    status: "published",
   })
     .sort({ isPinned: -1, createdAt: -1 })
     .limit(6);
@@ -1311,6 +1414,7 @@ app.get("/", async (req, res) => {
   for (let cat of categories) {
     const data = await Post.find({
       category: cat,
+      status: "published",
     })
       .sort({ isPinned: -1, createdAt: -1 })
       .limit(6);
@@ -1369,14 +1473,27 @@ app.post("/comment", async (req, res) => {
 app.get("/search", async (req, res) => {
   const q = req.query.q || "";
 
-  const posts = await Post.find({
-    $or: [
-      { title: { $regex: q, $options: "i" } },
-      { content: { $regex: q, $options: "i" } },
-    ],
-  });
+  let posts = [];
 
-  res.render("search", { posts, query: q });
+  if (q.trim()) {
+    posts = await Post.find(
+      {
+        status: "published",
+
+        $text: { $search: q },
+      },
+      {
+        score: { $meta: "textScore" },
+      },
+    ).sort({
+      score: { $meta: "textScore" },
+    });
+  }
+
+  res.render("search", {
+    posts,
+    query: q,
+  });
 });
 
 // ===== CATEGORY =====
@@ -1385,7 +1502,8 @@ app.get("/category/:name", async (req, res) => {
     const raw = req.params.name.trim().toLowerCase();
 
     const posts = await Post.find({
-      category: { $regex: "^" + raw + "$", $options: "i" },
+  category: { $regex: "^" + raw + "$", $options: "i" },
+  status: "published",
     }).sort({ createdAt: -1 });
 
     res.render("search", {
@@ -1409,8 +1527,9 @@ app.get("/sports/:type", async (req, res) => {
         $regex: "^" + type + "$",
         $options: "i",
       },
-    })
-      .sort({ createdAt: -1 });
+      status: "published",
+    }).sort({ createdAt: -1 });
+    
     res.render("search", {
       posts,
       query: capitalizeWords(type),
@@ -1433,6 +1552,7 @@ app.get("/markets", async (req, res) => {
     })
     .sort({ createdAt: -1 });
     const trendingMarkets = await Post.find({
+      status: "published",
       $or: [
         { category: "Markets" },
         { category: "Business" }
@@ -1456,7 +1576,9 @@ app.get("/sitemap.xml", async (req, res) => {
   try {
     const baseUrl = "https://globalfreshnews.com";
 
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const posts = await Post.find({
+      status: "published",
+    }).sort({ createdAt: -1 });
     const pages = await Page.find();
 
     let urls = "";

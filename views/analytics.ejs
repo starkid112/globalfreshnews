@@ -167,5 +167,112 @@
 </table>
 </div>
 
+<div class="analytics-card">
+
+  <h2>SEO Health</h2>
+
+  <hr>
+
+  <p>Total Articles: <%= totalIndexedContent %></p>
+
+  <hr>
+  
+  <p>Missing Meta Descriptions:
+     <%= missingMeta %>
+  </p>
+
+  <hr>
+  
+  <p>Missing Featured Images:
+     <%= missingImage %>
+  </p>
+
+  <hr>
+
+  <p>Missing Alt Text:
+     <%= missingAlt %>
+  </p>
+
+  <hr>
+
+  <p>Sponsored Articles:
+     <%= sponsoredCount %>
+  </p>
+
+  <hr>
+
+  <p>Breaking News Articles:
+     <%= breakingCount %>
+  </p>
+
+</div>
+
+<hr>
+
+<h2>SEO Problems</h2>
+
+<h3>Missing Meta Description</h3>
+
+<ul>
+<% postsMissingMeta.forEach(post => { %>
+<li>
+<%= post.title %>
+</li>
+<% }) %>
+</ul>
+
+<hr>
+
+<h3>Missing Alt Text</h3>
+
+<ul>
+<% postsMissingAlt.forEach(post => { %>
+<li>
+<%= post.title %>
+</li>
+<% }) %>
+</ul>
+
+<hr>
+
+<h3>Missing Featured Image</h3>
+
+<ul>
+<% postsMissingImage.forEach(post => { %>
+<li>
+<%= post.title %>
+</li>
+<% }) %>
+</ul>
+
+<hr>
+
+<h2>SEO Scores</h2>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Score</th>
+</tr>
+
+<% scoredPosts.forEach(post => { %>
+
+<tr>
+
+<td>
+<%= post.title %>
+</td>
+
+<td>
+<%= post.score %>/100
+</td>
+
+</tr>
+
+<% }) %>
+
+</table>
+
 </body>
 </html>

@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+Disallow: /admin/
+Disallow: /login
+Disallow: /search
+
 Sitemap: https://globalfreshnews.com/sitemap.xml

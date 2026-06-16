@@ -32,6 +32,12 @@ const postSchema = new mongoose.Schema(
       default: 0,
     },
 
+     status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "published"
+    },
+     
     featureType: {
       type: String,
       enum: ["big", "small", "none"],
@@ -72,5 +78,10 @@ postSchema.index({ category: 1 });
 postSchema.index({ subCategory: 1 });
 
 postSchema.index({ createdAt: -1 });
+
+postSchema.index({
+  title: "text",
+  content: "text",
+});
 
 module.exports = mongoose.model("Post", postSchema);

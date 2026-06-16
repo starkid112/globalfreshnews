@@ -4,6 +4,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/style.css">
 
+    <%- include("partials/google-analytics") %>
+
     <!-- ✅ DYNAMIC TITLE -->
     <title>
       <%= typeof post !== "undefined" ? post.title + " | " : "" %>

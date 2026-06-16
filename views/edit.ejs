@@ -154,6 +154,11 @@
 >
 </div>
 
+<select name="status" required>
+  <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Published</option>
+  <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+</select>
+
 <!-- SUBMIT -->
 <button type="submit">Update Post</button>
 
