@@ -771,25 +771,21 @@ async>
 
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+function checkCookieBanner() {
   const banner = document.getElementById("cookie-banner");
+  if (!banner) return;
   
-  // Check cookie the simple way
-  if (document.cookie.includes("cookiesAccepted=true")) {
+  if (document.cookie.indexOf("gf_ok=1") !== -1) {
     banner.style.display = "none";
   } else {
     banner.style.display = "flex";
   }
-});
+}
 
 function acceptCookies() {
-  // Tell server to set cookie properly
-  fetch('/accept-cookies', { method: 'POST' });
-  
-  // Hide banner immediately so user doesn't see flash
+  fetch('/accept-cookies', {method: 'POST'});
   document.getElementById("cookie-banner").style.display = "none";
 }
-</script>
 
 <script>
 function goBack() {

@@ -1315,7 +1315,7 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
 });
 
 // ===== DELETE =====
-app.post("/delete/:id", checkAuth, async (req, res) => {
+app.get("/delete/:id", checkAuth, async (req, res) => {
   await Post.findByIdAndDelete(req.params.id);
   res.redirect("/admin");
 });
