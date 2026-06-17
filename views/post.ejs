@@ -773,20 +773,23 @@ async>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("cookie-banner");
-  
-  // Check cookie the simple way
-  if (document.cookie.includes("cookiesAccepted=true")) {
-    banner.style.display = "none";
-  } else {
+
+  // CHECK COOKIE
+  const accepted = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("cookiesAccepted="));
+
+  // SHOW ONLY IF NOT ACCEPTED
+  if (!accepted) {
     banner.style.display = "flex";
+  } else {
+    banner.style.display = "none";
   }
 });
 
 function acceptCookies() {
-  // Tell server to set cookie properly
-  fetch('/accept-cookies', { method: 'POST' });
-  
-  // Hide banner immediately so user doesn't see flash
+  document.cookie =
+    "cookiesAccepted=true; max-age=31536000; path=/";
   document.getElementById("cookie-banner").style.display = "none";
 }
 </script>
