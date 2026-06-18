@@ -32,12 +32,12 @@ const postSchema = new mongoose.Schema(
       default: 0,
     },
 
-     status: {
+    status: {
       type: String,
       enum: ["draft", "published"],
-      default: "published"
+      default: "published",
     },
-     
+
     featureType: {
       type: String,
       enum: ["big", "small", "none"],
@@ -45,6 +45,21 @@ const postSchema = new mongoose.Schema(
     },
 
     isBreaking: {
+      type: Boolean,
+      default: false,
+    },
+
+    isSlider: {
+      type: Boolean,
+      default: false,
+    },
+
+    isExclusiveTop: {
+      type: Boolean,
+      default: false,
+    },
+
+    isExclusiveMiddle: {
       type: Boolean,
       default: false,
     },

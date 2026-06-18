@@ -127,6 +127,33 @@
 <div style="margin-top:10px;">
   <label>
     <input
+      type="checkbox"
+      name="isSlider"
+      <%= post.isSlider ? "checked" : "" %>> Show in Happening Now Slider
+  </label>
+</div>
+
+<div style="margin-top:10px;">
+  <label>
+    <input
+      type="checkbox"
+      name="isExclusiveTop"
+      <%= post.isExclusiveTop ? "checked" : "" %>> Show in Exclusive News (Top)
+  </label>
+</div>
+
+<div style="margin-top:10px;">
+  <label>
+    <input
+      type="checkbox"
+      name="isExclusiveMiddle"
+      <%= post.isExclusiveMiddle ? "checked" : "" %>> Show in Exclusive News (Middle)
+  </label>
+</div>
+
+<div style="margin-top:10px;">
+  <label>
+    <input
       type="checkbox" name="sponsored" <%= post.sponsored ? "checked" : "" %>> Sponsored Post
   </label>
 </div>

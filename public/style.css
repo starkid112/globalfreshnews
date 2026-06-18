@@ -532,6 +532,73 @@ body.dark .search-box input {
     100% { transform: translateX(-50%); }
 }
 
+/* ========================== HAPPENING NOW ========================== */
+.happening-now {
+margin: 30px 0;
+}
+
+.happening-slider {
+display: flex;
+overflow-x: auto;
+gap: 12px;
+padding: 0 16px;
+scroll-snap-type: x mandatory;
+scrollbar-width: none;
+-ms-overflow-style: none;
+}
+
+.happening-slider::-webkit-scrollbar {
+display: none;
+}
+
+.happening-card {
+flex: 0 0 280px;
+height: 180px;
+position: relative;
+border-radius: 12px;
+overflow: hidden;
+scroll-snap-align: start;
+text-decoration: none;
+}
+
+.happening-card img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}
+
+.happening-card .overlay {
+position: absolute;
+left: 0;
+right: 0;
+bottom: 0;
+padding: 15px;
+background: linear-gradient( transparent, rgba(0,0,0,.85));
+}
+
+.happening-card h3 {
+color: #fff;
+font-size: 16px;
+font-weight: 700;
+margin: 0 0 5px;
+display: -webkit-box;
+line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.happening-card span {
+color: #ddd;
+font-size: 12px;
+}
+
+@media(max-width:768px) {
+.happening-card{
+flex: 0 0 280px;
+}
+}
+
 /* ================= LAYOUT ================= */
 .main {
     min-height: 400px;
@@ -562,6 +629,87 @@ body.dark .search-box input {
   .sidebar {
     width: 100%;
   }
+}
+
+/* ========================== EXCLUSIVE NEWS ========================== */
+.exclusive-news {
+margin: 35px 0;
+}
+
+.exclusive-list {
+display: flex;
+flex-direction: column;
+}
+
+.exclusive-card {
+display: flex;
+justify-content: space-between;
+gap: 15px;
+padding: 0 0 20px;
+margin-bottom: 20px;
+border-bottom: 1px solid #eee;
+text-decoration: none;
+color: inherit;
+}
+
+.exclusive-content {
+flex: 1;
+min-width: 0;
+}
+
+.exclusive-content h3 {
+font-size: 16px;
+font-weight: 700;
+line-height: 1.4;
+margin: 0 0 8px;
+display: -webkit-box;
+line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.exclusive-card:hover h3 {
+text-decoration: underline;
+}
+
+.exclusive-content p {
+font-size: 14px;
+color: #666;
+line-height: 1.5;
+margin: 0 0 8px;
+display: -webkit-box;
+line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.exclusive-content span {
+font-size: 12px;
+color: #888;
+}
+
+.exclusive-thumb {
+width: 120px;
+height: 90px;
+flex-shrink: 0;
+}
+
+.exclusive-thumb img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+border-radius: 6px;
+}
+
+@media(max-width:768px) {
+.exclusive-card{
+align-items: flex-start;
+}
+
+.exclusive-thumb {
+width: 120px;
+height: 90px;
+}
 }
 
 /* ================= POSTS ================= */

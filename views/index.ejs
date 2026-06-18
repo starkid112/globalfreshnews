@@ -251,6 +251,36 @@ async>
 </div>
 <% } %>
 
+<!-- TOP TRENDS -->
+<% if (sliderNews && sliderNews.length) { %>
+<section class="happening-now">
+<h2 class="section-title">
+Top Trends
+</h2>
+<div class="happening-slider">
+<% sliderNews.forEach(post => { %>
+<a
+href="/post/<%= post.slug %>"
+class="happening-card"
+>
+<img
+src="/uploads/<%= post.image %>"
+alt="<%= post.altText || post.title %>"
+>
+<div class="overlay">
+<h3>
+<%= post.title %>
+</h3>
+<span>
+Global Fresh News
+</span>
+</div>
+</a>
+<% }) %>
+</div>
+</section>
+<% } %>
+
 
 <!-- HEADER ADS -->
 <% if (ads && ads.header && ads.header.length) { %>
@@ -318,6 +348,47 @@ async>
 
         <hr>
 
+<!-- EXCLUSIVE NEWS TOP -->
+<% if (exclusiveTopNews && exclusiveTopNews.length) { %>
+<section class="exclusive-news">
+<h2 class="section-title">
+Exclusive News
+</h2>
+<div class="exclusive-list">
+<% exclusiveTopNews.forEach(post => { %>
+<a
+href="/post/<%= post.slug %>"
+class="exclusive-card"
+>
+<div class="exclusive-content">
+<h3>
+<%= post.title %>
+</h3>
+<p>
+<%= post.metaDescription || "" %>
+</p>
+<span>
+<%= new Date(post.createdAt).toLocaleDateString('en-GB',{
+day:'2-digit',
+month:'short',
+year:'numeric'
+}) %>
+</span>
+</div>
+<div class="exclusive-thumb">
+<img
+src="/uploads/<%= post.image %>"
+alt="<%= post.altText || post.title %>"
+>
+</div>
+</a>
+<% }) %>
+</div>
+</section>
+<% } %>        
+
+    <hr>
+
 <!-- CATEGORY + POSTS -->
 <% if (categoryPosts) { %>
   <% Object.keys(categoryPosts).forEach((cat,index) => { %>
@@ -368,6 +439,44 @@ async>
     </div>
 
     <a href="/category/<%= cat %>" class="view-more">View More →</a>
+
+    <% if(index === 4 && exclusiveMiddleNews && exclusiveMiddleNews.length){ %>
+<section class="exclusive-news">
+<h2 class="section-title">
+Exclusive News
+</h2>
+<div class="exclusive-list">
+<% exclusiveMiddleNews.forEach(post => { %>
+<a
+href="/post/<%= post.slug %>"
+class="exclusive-card"
+>
+<div class="exclusive-content">
+<h3>
+<%= post.title %>
+</h3>
+<p>
+<%= post.metaDescription || "" %>
+</p>
+<span>
+<%= new Date(post.createdAt).toLocaleDateString('en-GB',{
+day:'2-digit',
+month:'short',
+year:'numeric'
+}) %>
+</span>
+</div>
+<div class="exclusive-thumb">
+<img
+src="/uploads/<%= post.image %>"
+alt="<%= post.altText || post.title %>"
+>
+</div>
+</a>
+<% }) %>
+</div>
+</section>
+<% } %>
 
    <%
 let ad = null;

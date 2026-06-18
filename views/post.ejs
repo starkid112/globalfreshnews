@@ -466,6 +466,36 @@ async>
 
 <hr>
 
+<!-- TOP TRENDS -->
+<% if(sliderNews && sliderNews.length){ %>
+<section class="happening-now">
+<h2 class="section-title">
+Top Trends
+</h2>
+<div class="happening-slider">
+<% sliderNews.forEach(post => { %>
+<a
+href="/post/<%= post.slug %>"
+class="happening-card"
+>
+<img
+src="/uploads/<%= post.image || 'default.jpg' %>"
+alt="<%= post.title %>"
+>
+<div class="overlay">
+<h3>
+<%= post.title %>
+</h3>
+<span>
+Global Fresh News
+</span>
+</div>
+</a>
+<% }) %>
+</div>
+</section>
+<% } %>
+
 <!-- POST FOOTER ADS -->
 <% if (ads && ads.postFooter && ads.postFooter.length) { %>
   <% ads.postFooter.forEach(ad => { %>
@@ -531,6 +561,45 @@ async>
     </div>
   <% }) %>
 </div>
+<% } %>
+
+<!-- EXCLUSIVE NEWS -->
+<% if(exclusiveNews && exclusiveNews.length){ %>
+<section class="exclusive-news">
+<h2 class="section-title">
+Exclusive News
+</h2>
+<div class="exclusive-list">
+<% exclusiveNews.forEach(post => { %>
+<a
+href="/post/<%= post.slug %>"
+class="exclusive-card"
+>
+<div class="exclusive-content">
+<h3>
+<%= post.title %>
+</h3>
+<p>
+<%= post.metaDescription || "" %>
+</p>
+<span>
+<%= new Date(post.createdAt).toLocaleDateString('en-GB',{
+day:'2-digit',
+month:'short',
+year:'numeric'
+}) %>
+</span>
+</div>
+<div class="exclusive-thumb">
+<img
+src="/uploads/<%= post.image || 'default.jpg' %>"
+alt="<%= post.altText || post.title %>"
+>
+</div>
+</a>
+<% }) %>
+</div>
+</section>
 <% } %>
 
 <!-- SPONSORED CONTENT -->

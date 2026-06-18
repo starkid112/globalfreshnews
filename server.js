@@ -1099,6 +1099,9 @@ app.post("/create", checkAuth, uploadPost.single("image"), async (req, res) => {
     keywords: req.body.keywords,
     featureType: req.body.featureType || "none",
     isBreaking: req.body.isBreaking === "on",
+    isSlider: req.body.isSlider === "on",
+    isExclusiveTop: req.body.isExclusiveTop === "on",
+    isExclusiveMiddle: req.body.isExclusiveMiddle === "on",
     sponsored: req.body.sponsored === "on",
     isPinned: req.body.isPinned === "on",
     pinnedUntil: req.body.pinnedUntil ? new Date(req.body.pinnedUntil) : null,
@@ -1182,6 +1185,34 @@ app.get("/post/:slug", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(6);
     
+    const sliderNews = await Post.find({
+      isSlider: true,
+      status: "published",
+      _id: { $ne: post._id },
+    })
+      .sort({ createdAt: -1 })
+      .limit(10);
+    
+    const exclusiveTop = await Post.find({
+      isExclusiveTop: true,
+      status: "published",
+      _id: { $ne: post._id },
+    })
+      .sort({ createdAt: -1 })
+      .limit(4);
+
+    const exclusiveMiddle = await Post.find({
+      isExclusiveMiddle: true,
+      status: "published",
+      _id: { $ne: post._id },
+    })
+      .sort({ createdAt: -1 })
+      .limit(4);
+
+    const exclusiveNews = [...exclusiveTop, ...exclusiveMiddle].sort(
+      (a, b) => b.createdAt - a.createdAt,
+    );
+    
     const breaking = await Post.find({
       isBreaking: true,
     })
@@ -1252,6 +1283,8 @@ if (res.locals.ads.postMiddle && res.locals.ads.postMiddle.length) {
       comments,
       trending,
       related,
+      sliderNews,
+      exclusiveNews,
       sponsoredPosts,
       homepage: res.locals.ads.homepage,
     });
@@ -1297,6 +1330,9 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
     category: req.body.category,
     subCategory: req.body.subCategory,
     isBreaking: !!req.body.isBreaking,
+    isSlider: !!req.body.isSlider,
+    isExclusiveTop: !!req.body.isExclusiveTop,
+    isExclusiveMiddle: !!req.body.isExclusiveMiddle,
     featureType: req.body.featureType,
     altText: req.body.altText || req.body.title,
     caption: req.body.caption,
@@ -1377,6 +1413,27 @@ app.get("/", async (req, res) => {
   })
     .sort({ isPinned: -1, createdAt: -1 })
     .limit(6);
+  
+  const sliderNews = await Post.find({
+    isSlider: true,
+    status: "published",
+  })
+    .sort({ createdAt: -1 })
+    .limit(10);
+  
+  const exclusiveTopNews = await Post.find({
+    isExclusiveTop: true,
+    status: "published",
+  })
+    .sort({ createdAt: -1 })
+    .limit(8);
+  
+  const exclusiveMiddleNews = await Post.find({
+    isExclusiveMiddle: true,
+    status: "published",
+  })
+    .sort({ createdAt: -1 })
+    .limit(8);
 
   // ✅ FIX SLUGS
   const fix = (arr) =>
@@ -1428,6 +1485,9 @@ app.get("/", async (req, res) => {
     posts,
     trending,
     breaking,
+    sliderNews,
+    exclusiveTopNews,
+    exclusiveMiddleNews,
     bigFeatures,
     smallFeatures,
     sponsoredPosts, // ✅ IMPORTANT
