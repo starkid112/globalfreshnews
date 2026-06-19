@@ -1747,6 +1747,49 @@ app.get("/:slug", async (req, res, next) => {
   }
 });
 
+// ===== RSS FEED =====
+const RSS = require('rss');
+
+app.get('/rss.xml', async (req, res) => {
+  try {
+    const feed = new RSS({
+      title: res.locals.setting?.siteName || 'Global Fresh News',
+      description: 'Latest news and updates from Global Fresh News',
+      feed_url: 'https://globalfreshnews.com/rss.xml',
+      site_url: 'https://globalfreshnews.com',
+      language: 'en',
+      pubDate: new Date(),
+      ttl: '15'
+    });
+
+    // Get latest 20 posts - same as your sitemap
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .limit(30);
+
+    posts.forEach(post => {
+      // Clean content for RSS
+      const desc = post.content ? post.content.substring(0, 300).replace(/<[^>]*>/g, '') + '...' : '';
+      
+      feed.item({
+        title: post.title,
+        description: desc,
+        url: `https://globalfreshnews.com/post/${post.slug}`,
+        guid: post._id.toString(),
+        date: post.createdAt,
+        categories: post.category ? [post.category] : []
+      });
+    });
+
+    res.set('Content-Type', 'application/rss+xml; charset=utf-8');
+    res.send(feed.xml({ indent: true }));
+  } catch (err) {
+    console.log('RSS Error:', err);
+    res.status(500).send('RSS Error');
+  }
+});
+// ===== END RSS =====
+
 app.use((req, res) => {
   res.status(404).render("404");
 });
