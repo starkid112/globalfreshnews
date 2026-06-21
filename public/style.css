@@ -603,6 +603,9 @@ flex: 0 0 280px;
 .main {
     min-height: 400px;
     flex: 1;
+    /* overflow: hidden; */
+    min-height: 400px;
+    min-width: 0;
 }
 
 .container {

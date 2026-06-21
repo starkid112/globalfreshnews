@@ -6,8 +6,12 @@ const postSchema = new mongoose.Schema(
     content: String,
     image: String,
     author: String,
+
     category: String,
+    region: String,
     subCategory: String,
+    country: String,
+
     email: String,
 
     slug: {

@@ -89,6 +89,140 @@
   <option value="Motorsport" <%= post.subCategory === 'Motorsport' ? 'selected' : '' %>>Motorsport</option>
 </select>  
 
+<!-- REGION -->
+<label>Region (Global News Only)</label>
+<select name="region" id="regionEdit">
+    <option value="">Select Region</option>
+    <option value="Africa" <%= post.region === "Africa" ? "selected" : "" %>>Africa</option>
+    <option value="Europe" <%= post.region === "Europe" ? "selected" : "" %>>Europe</option>
+    <option value="Asia" <%= post.region === "Asia" ? "selected" : "" %>>Asia</option>
+    <option value="North America" <%= post.region === "North America" ? "selected" : "" %>>North America</option>
+    <option value="South America" <%= post.region === "South America" ? "selected" : "" %>>South America</option>
+    <option value="Middle East" <%= post.region === "Middle East" ? "selected" : "" %>>Middle East</option>
+    <option value="Oceania" <%= post.region === "Oceania" ? "selected" : "" %>>Oceania</option>
+</select>
+
+<label>Country (For Global News)</label>
+<select name="country">
+<option value="">Select Country</option>
+<optgroup label="Africa">
+<option value="Nigeria" <%= post.country === 'Nigeria' ? 'selected' : '' %>>Nigeria</option>
+<option value="Ghana" <%= post.country === 'Ghana' ? 'selected' : '' %>>Ghana</option>
+<option value="Kenya" <%= post.country === 'Kenya' ? 'selected' : '' %>>Kenya</option>
+<option value="South Africa" <%= post.country === 'South Africa' ? 'selected' : '' %>>South Africa</option>
+<option value="Egypt" <%= post.country === 'Egypt' ? 'selected' : '' %>>Egypt</option>
+<option value="Ethiopia" <%= post.country === 'Ethiopia' ? 'selected' : '' %>>Ethiopia</option>
+<option value="Algeria" <%= post.country === 'Algeria' ? 'selected' : '' %>>Algeria</option>
+<option value="Morocco" <%= post.country === 'Morocco' ? 'selected' : '' %>>Morocco</option>
+<option value="Tunisia" <%= post.country === 'Tunisia' ? 'selected' : '' %>>Tunisia</option>
+<option value="Libya" <%= post.country === 'Libya' ? 'selected' : '' %>>Libya</option>
+<option value="Uganda" <%= post.country === 'Uganda' ? 'selected' : '' %>>Uganda</option>
+<option value="Tanzania" <%= post.country === 'Tanzania' ? 'selected' : '' %>>Tanzania</option>
+<option value="Rwanda" <%= post.country === 'Rwanda' ? 'selected' : '' %>>Rwanda</option>
+<option value="Cameroon" <%= post.country === 'Cameroon' ? 'selected' : '' %>>Cameroon</option>
+<option value="Senegal" <%= post.country === 'Senegal' ? 'selected' : '' %>>Senegal</option>
+<option value="Ivory Coast" <%= post.country === 'Ivory Coast' ? 'selected' : '' %>>Ivory Coast</option>
+<option value="Zimbabwe" <%= post.country === 'Zimbabwe' ? 'selected' : '' %>>Zimbabwe</option>
+<option value="Zambia" <%= post.country === 'Zambia' ? 'selected' : '' %>>Zambia</option>
+<option value="Botswana" <%= post.country === 'Botswana' ? 'selected' : '' %>>Botswana</option>
+<option value="Namibia" <%= post.country === 'Namibia' ? 'selected' : '' %>>Namibia</option>
+</optgroup>
+
+<optgroup label="Europe">
+<option value="United Kingdom" <%= post.country === 'United Kingdom' ? 'selected' : '' %>>United Kingdom</option>
+<option value="France" <%= post.country === 'France' ? 'selected' : '' %>>France</option>
+<option value="Germany" <%= post.country === 'Germany' ? 'selected' : '' %>>Germany</option>
+<option value="Spain" <%= post.country === 'Spain' ? 'selected' : '' %>>Spain</option>
+<option value="Italy" <%= post.country === 'Italy' ? 'selected' : '' %>>Italy</option>
+<option value="Netherlands" <%= post.country === 'Netherlands' ? 'selected' : '' %>>Netherlands</option>
+<option value="Belgium" <%= post.country === 'Belgium' ? 'selected' : '' %>>Belgium</option>
+<option value="Portugal" <%= post.country === 'Portugal' ? 'selected' : '' %>>Portugal</option>
+<option value="Switzerland" <%= post.country === 'Switzerland' ? 'selected' : '' %>>Switzerland</option>
+<option value="Austria" <%= post.country === 'Austria' ? 'selected' : '' %>>Austria</option>
+<option value="Sweden" <%= post.country === 'Sweden' ? 'selected' : '' %>>Sweden</option>
+<option value="Norway" <%= post.country === 'Norway' ? 'selected' : '' %>>Norway</option>
+<option value="Denmark" <%= post.country === 'Denmark' ? 'selected' : '' %>>Denmark</option>
+<option value="Finland" <%= post.country === 'Finland' ? 'selected' : '' %>>Finland</option>
+<option value="Ireland" <%= post.country === 'Ireland' ? 'selected' : '' %>>Ireland</option>
+<option value="Poland" <%= post.country === 'Poland' ? 'selected' : '' %>>Poland</option>
+<option value="Ukraine" <%= post.country === 'Ukraine' ? 'selected' : '' %>>Ukraine</option>
+<option value="Greece" <%= post.country === 'Greece' ? 'selected' : '' %>>Greece</option>
+<option value="Czech Republic" <%= post.country === 'Czech Republic' ? 'selected' : '' %>>Czech Republic</option>
+<option value="Romania" <%= post.country === 'Romania' ? 'selected' : '' %>>Romania</option>
+</optgroup>
+
+<optgroup label="Asia">
+<option value="China" <%= post.country === 'China' ? 'selected' : '' %>>China</option>
+<option value="India" <%= post.country === 'India' ? 'selected' : '' %>>India</option>
+<option value="Japan" <%= post.country === 'Japan' ? 'selected' : '' %>>Japan</option>
+<option value="South Korea" <%= post.country === 'South Korea' ? 'selected' : '' %>>South Korea</option>
+<option value="North Korea" <%= post.country === 'North Korea' ? 'selected' : '' %>>North Korea</option>
+<option value="Pakistan" <%= post.country === 'Pakistan' ? 'selected' : '' %>>Pakistan</option>
+<option value="Bangladesh" <%= post.country === 'Bangladesh' ? 'selected' : '' %>>Bangladesh</option>
+<option value="Indonesia" <%= post.country === 'Indonesia' ? 'selected' : '' %>>Indonesia</option>
+<option value="Malaysia" <%= post.country === 'Malaysia' ? 'selected' : '' %>>Malaysia</option>
+<option value="Singapore" <%= post.country === 'Singapore' ? 'selected' : '' %>>Singapore</option>
+<option value="Thailand" <%= post.country === 'Thailand' ? 'selected' : '' %>>Thailand</option>
+<option value="Vietnam" <%= post.country === 'Vietnam' ? 'selected' : '' %>>Vietnam</option>
+<option value="Philippines" <%= post.country === 'Philippines' ? 'selected' : '' %>>Philippines</option>
+<option value="Sri Lanka" <%= post.country === 'Sri Lanka' ? 'selected' : '' %>>Sri Lanka</option>
+<option value="Nepal" <%= post.country === 'Nepal' ? 'selected' : '' %>>Nepal</option>
+<option value="Mongolia" <%= post.country === 'Mongolia' ? 'selected' : '' %>>Mongolia</option>
+<option value="Kazakhstan" <%= post.country === 'Kazakhstan' ? 'selected' : '' %>>Kazakhstan</option>
+<option value="Uzbekistan" <%= post.country === 'Uzbekistan' ? 'selected' : '' %>>Uzbekistan</option>
+</optgroup>
+<optgroup label="North America">
+<option value="United States" <%= post.country === 'United States' ? 'selected' : '' %>>United States</option>
+<option value="Canada" <%= post.country === 'Canada' ? 'selected' : '' %>>Canada</option>
+<option value="Mexico" <%= post.country === 'Mexico' ? 'selected' : '' %>>Mexico</option>
+<option value="Costa Rica" <%= post.country === 'Costa Rica' ? 'selected' : '' %>>Costa Rica</option>
+<option value="Panama" <%= post.country === 'Panama' ? 'selected' : '' %>>Panama</option>
+<option value="Jamaica" <%= post.country === 'Jamaica' ? 'selected' : '' %>>Jamaica</option>
+<option value="Cuba" <%= post.country === 'Cuba' ? 'selected' : '' %>>Cuba</option>
+<option value="Haiti" <%= post.country === 'Haiti' ? 'selected' : '' %>>Haiti</option>
+<option value="Dominican Republic" <%= post.country === 'Dominican Republic' ? 'selected' : '' %>>Dominican Republic</option>
+<option value="Trinidad and Tobago" <%= post.country === 'Trinidad and Tobago' ? 'selected' : '' %>>Trinidad and Tobago</option>
+
+</optgroup>
+<optgroup label="South America">
+<option value="Brazil" <%= post.country === 'Brazil' ? 'selected' : '' %>>Brazil</option>
+<option value="Argentina" <%= post.country === 'Argentina' ? 'selected' : '' %>>Argentina</option>
+<option value="Chile" <%= post.country === 'Chile' ? 'selected' : '' %>>Chile</option>
+<option value="Colombia" <%= post.country === 'Colombia' ? 'selected' : '' %>>Colombia</option>
+<option value="Peru" <%= post.country === 'Peru' ? 'selected' : '' %>>Peru</option>
+<option value="Venezuela" <%= post.country === 'Venezuela' ? 'selected' : '' %>>Venezuela</option>
+<option value="Ecuador" <%= post.country === 'Ecuador' ? 'selected' : '' %>>Ecuador</option>
+<option value="Uruguay" <%= post.country === 'Uruguay' ? 'selected' : '' %>>Uruguay</option>
+<option value="Paraguay" <%= post.country === 'Paraguay' ? 'selected' : '' %>>Paraguay</option>
+<option value="Bolivia" <%= post.country === 'Bolivia' ? 'selected' : '' %>>Bolivia</option>
+</optgroup>
+
+<optgroup label="Middle East">
+<option value="Saudi Arabia" <%= post.country === 'Saudi Arabia' ? 'selected' : '' %>>Saudi Arabia</option>
+<option value="United Arab Emirates" <%= post.country === 'United Arab Emirates' ? 'selected' : '' %>>United Arab Emirates</option>
+<option value="Qatar" <%= post.country === 'Qatar' ? 'selected' : '' %>>Qatar</option>
+<option value="Kuwait" <%= post.country === 'Kuwait' ? 'selected' : '' %>>Kuwait</option>
+<option value="Bahrain" <%= post.country === 'Bahrain' ? 'selected' : '' %>>Bahrain</option>
+<option value="Oman" <%= post.country === 'Oman' ? 'selected' : '' %>>Oman</option>
+<option value="Jordan" <%= post.country === 'Jordan' ? 'selected' : '' %>>Jordan</option>
+<option value="Lebanon" <%= post.country === 'Lebanon' ? 'selected' : '' %>>Lebanon</option>
+<option value="Israel" <%= post.country === 'Israel' ? 'selected' : '' %>>Israel</option>
+<option value="Iran" <%= post.country === 'Iran' ? 'selected' : '' %>>Iran</option>
+<option value="Iraq" <%= post.country === 'Iraq' ? 'selected' : '' %>>Iraq</option>
+<option value="Syria" <%= post.country === 'Syria' ? 'selected' : '' %>>Syria</option>
+<option value="Yemen" <%= post.country === 'Yemen' ? 'selected' : '' %>>Yemen</option>
+<option value="Turkey" <%= post.country === 'Turkey' ? 'selected' : '' %>>Turkey</option>
+
+</optgroup>
+<optgroup label="Oceania">
+<option value="Australia" <%= post.country === 'Australia' ? 'selected' : '' %>>Australia</option>
+<option value="New Zealand" <%= post.country === 'New Zealand' ? 'selected' : '' %>>New Zealand</option>
+<option value="Fiji" <%= post.country === 'Fiji' ? 'selected' : '' %>>Fiji</option>
+<option value="Papua New Guinea" <%= post.country === 'Papua New Guinea' ? 'selected' : '' %>>Papua New Guinea</option>
+<option value="Samoa" <%= post.country === 'Samoa' ? 'selected' : '' %>>Samoa</option>
+<option value="Tonga" <%= post.country === 'Tonga' ? 'selected' : '' %>>Tonga</option>
+</optgroup>
+</select>
 
 <!-- IMAGE -->
 <label>Upload Image</label>

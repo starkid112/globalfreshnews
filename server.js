@@ -1092,6 +1092,8 @@ app.post("/create", checkAuth, uploadPost.single("image"), async (req, res) => {
     author: req.body.author,
     category: req.body.category,
     subCategory: req.body.subCategory,
+    region: req.body.region,
+    country: req.body.country,
     image: req.file ? req.file.filename : null,
     altText: req.body.altText || req.body.title,
     caption: req.body.caption,
@@ -1329,6 +1331,8 @@ app.post("/edit/:id", checkAuth, uploadPost.single("image"), async (req, res) =>
     author: req.body.author,
     category: req.body.category,
     subCategory: req.body.subCategory,
+    region: req.body.region,
+    country: req.body.country,
     isBreaking: !!req.body.isBreaking,
     isSlider: !!req.body.isSlider,
     isExclusiveTop: !!req.body.isExclusiveTop,
@@ -1574,6 +1578,48 @@ app.get("/category/:name", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.send("Error loading category");
+  }
+});
+
+// ===== GLOBAL REGION =====
+app.get("/global/:region", async (req, res) => {
+  try {
+    const region = req.params.region;
+    const posts = await Post.find({
+      category: "Global",
+      region: region,
+      status: "published",
+    }).sort({ createdAt: -1 });
+    res.render("search", {
+      posts,
+      query: region,
+      ads: res.locals.ads
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading region");
+  }
+});
+
+// ===== GLOBAL COUNTRY ===== 
+app.get("/global/:region/:country", async (req, res) => {
+  try {
+    const region = req.params.region;
+    const country = req.params.country;
+    const posts = await Post.find({
+      category: "Global",
+      region: region,
+      country: country,
+      status: "published",
+    }).sort({ createdAt: -1 });
+    res.render("search", {
+      posts,
+      query: country,
+      ads: res.locals.ads
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading country");
   }
 });
 
