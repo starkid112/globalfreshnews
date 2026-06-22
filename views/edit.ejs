@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ✅ CKEditor -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+   <!-- ✅ CKEditor -->
+    <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
 </head>
 <body>
 
@@ -343,9 +343,13 @@ document.getElementById("title").addEventListener("input", function() {
 </script>
 
 <script>
-ClassicEditor
-  .create(document.querySelector("#editor"))
-  .catch(error => console.error(error));
+window.onload = function () {
+    CKEDITOR.replace('editor', {
+        filebrowserUploadUrl: '/upload-editor-image',
+        filebrowserUploadMethod: 'form',
+        height: 300
+    });
+};
 </script>
 
 </body>

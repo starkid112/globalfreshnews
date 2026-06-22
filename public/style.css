@@ -461,6 +461,31 @@ body.dark .small-text h4{
     color: white;
 }
 
+.dropdown-sub {
+    position: relative;
+}
+
+.sub-menu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    min-width: 220px;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,.15);
+    z-index: 1000;
+}
+
+.dropdown-sub:hover .sub-menu {
+    display: block;
+}
+
+.sub-menu a {
+    display: block;
+    padding: 10px 15px;
+    white-space: nowrap;
+}
+
 /* ================= SEARCH ================= */
 .search-box {
     display: flex;

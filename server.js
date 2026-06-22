@@ -1604,8 +1604,8 @@ app.get("/global/:region", async (req, res) => {
 // ===== GLOBAL COUNTRY ===== 
 app.get("/global/:region/:country", async (req, res) => {
   try {
-    const region = req.params.region;
-    const country = req.params.country;
+    const region = req.params.region.replace(/-/g, " ");
+    const country = req.params.country.replace(/-/g, " ");
     const posts = await Post.find({
       category: "Global",
       region: region,
@@ -1615,7 +1615,7 @@ app.get("/global/:region/:country", async (req, res) => {
     res.render("search", {
       posts,
       query: country,
-      ads: res.locals.ads
+      ads: res.locals.ads,
     });
   } catch (err) {
     console.log(err);
