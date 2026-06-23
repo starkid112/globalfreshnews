@@ -1623,6 +1623,50 @@ app.get("/global/:region/:country", async (req, res) => {
   }
 });
 
+// ===== CATEGORY + REGION =====
+app.get("/category/:category/:region", async (req, res) => {
+  try {
+    const category = req.params.category.replace(/-/g, " ");
+    const region = req.params.region.replace(/-/g, " ");
+    const posts = await Post.find({
+      category: { $regex: "^" + category + "$", $options: "i" },
+      region: region,
+      status: "published",
+    }).sort({ createdAt: -1 });
+    res.render("search", {
+      posts,
+      query: `${category} - ${region}`,
+      ads: res.locals.ads,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading region");
+  }
+});
+
+// ===== CATEGORY + REGION + COUNTRY =====
+app.get("/category/:category/:region/:country", async (req, res) => {
+  try {
+    const category = req.params.category.replace(/-/g, " ");
+    const region = req.params.region.replace(/-/g, " ");
+    const country = req.params.country.replace(/-/g, " ");
+    const posts = await Post.find({
+      category: { $regex: "^" + category + "$", $options: "i" },
+      region: region,
+      country: country,
+      status: "published",
+    }).sort({ createdAt: -1 });
+    res.render("search", {
+      posts,
+      query: `${country}`,
+      ads: res.locals.ads,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading country");
+  }
+});
+
 
 // ===== SPORTS / SUBCATEGORY =====
 app.get("/sports/:type", async (req, res) => {
