@@ -48,6 +48,10 @@
 <label>Author</label>
 <input type="text" name="author" value="<%= post.author %>" required>
 
+<label>SEO Title (Optional)</label>
+
+<input type="text" name="seoTitle" maxlength="60" value="<%= post.seoTitle || '' %>" placeholder="Leave blank to use Post Title">
+
 <!-- META DESCRIPTION -->
 <label>Meta Description (SEO)</label>
 <textarea name="metaDescription"><%= post.metaDescription || "" %></textarea>

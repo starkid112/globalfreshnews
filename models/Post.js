@@ -26,6 +26,11 @@ const postSchema = new mongoose.Schema(
     keywords: String,
     altText: String,
 
+    seoTitle: {
+    type: String,
+    default: ""
+    },
+
     views: {
       type: Number,
       default: 0,

@@ -10,11 +10,13 @@
      crossorigin="anonymous"></script>
 
     <!-- ✅ DYNAMIC TITLE -->
-    <title>
-      <%= typeof post !== "undefined"
-      ? post.title + " | Global Fresh News"
+  <title>
+    <%= typeof post !== "undefined"
+      ? ((post.seoTitle && post.seoTitle.trim())
+          ? post.seoTitle
+          : post.title) + " | Global Fresh News"
       : (setting.siteName || "Global Fresh News") %>
-    </title>
+  </title>
 
     <link rel="canonical" href="https://globalfreshnews.com/post/<%= post.slug %>">
 
