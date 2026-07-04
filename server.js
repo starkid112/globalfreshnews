@@ -493,7 +493,7 @@ app.get("/admin", checkAuth, async (req, res) => {
 app.get("/analytics", checkAuth, async (req, res) => {
   const topPosts = await Post.find()
     .sort({ views: -1 })
-    .limit(10);
+    .limit(500);
   const totalPosts = await Post.countDocuments();
 
   const totalViews = await Post.aggregate([
