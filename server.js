@@ -27,10 +27,6 @@ const Page = require("./models/Page");
 const Setting = require("./models/Setting");
 
 const app = express();
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -38,7 +34,6 @@ const loginLimiter = rateLimit({
   message: "Too many login attempts. Try again after 15 minutes.",
 });
 
-app.use(limiter);
 app.set("trust proxy", 1);
 
 function capitalizeWords(str) {
