@@ -18,20 +18,31 @@
 </head>
 <body>
 
-<!-- ✅ NAVBAR (CONSISTENT DESIGN) -->
+<!-- ✅ NAVBAR -->
 <nav class="navbar">
-    <div class="nav-left">
-        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/category/Global">Global</a>
-            <a href="/category/Tech">Tech</a>
-            <a href="/category/Politics">Politics</a>
-            <a href="/category/Health">Health</a>
-            <a href="/category/Entertainment">Entertainment</a>
-            <a href="/category/Sports">Sports</a>
+
+    <div class="navbar-top">
+
+        <!-- LOGO -->
+        <div class="nav-left">
+            <a href="/">
+                <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+            </a>
         </div>
+
     </div>
+
+    <!-- NAV LINKS -->
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/category/Global">Global</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Entertainment">Entertainment</a>
+        <a href="/category/Sports">Sports</a>
+    </div>
+
 </nav>
 
 <!-- ✅ LOGIN CONTAINER -->

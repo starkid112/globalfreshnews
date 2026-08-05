@@ -1581,10 +1581,16 @@ app.get("/category/:name", async (req, res) => {
 // ===== GLOBAL REGION =====
 app.get("/global/:region", async (req, res) => {
   try {
-    const region = req.params.region;
+    const region = req.params.region.replace(/-/g, " ");
     const posts = await Post.find({
-      category: "Global",
-      region: region,
+      category: {
+        $regex: "^Global$",
+        $options: "i",
+      },
+      region: {
+        $regex: "^" + region + "$",
+        $options: "i",
+      },
       status: "published",
     }).sort({ createdAt: -1 });
     res.render("search", {
@@ -1604,9 +1610,18 @@ app.get("/global/:region/:country", async (req, res) => {
     const region = req.params.region.replace(/-/g, " ");
     const country = req.params.country.replace(/-/g, " ");
     const posts = await Post.find({
-      category: "Global",
-      region: region,
-      country: country,
+      category: {
+        $regex: "^Global$",
+        $options: "i",
+      },
+      region: {
+        $regex: "^" + region + "$",
+        $options: "i",
+      },
+      country: {
+        $regex: "^" + country + "$",
+        $options: "i",
+      },
       status: "published",
     }).sort({ createdAt: -1 });
     res.render("search", {
@@ -1627,7 +1642,10 @@ app.get("/category/:category/:region", async (req, res) => {
     const region = req.params.region.replace(/-/g, " ");
     const posts = await Post.find({
       category: { $regex: "^" + category + "$", $options: "i" },
-      region: region,
+      region: {
+        $regex: "^" + region + "$",
+        $options: "i",
+      },
       status: "published",
     }).sort({ createdAt: -1 });
     res.render("search", {
@@ -1649,8 +1667,14 @@ app.get("/category/:category/:region/:country", async (req, res) => {
     const country = req.params.country.replace(/-/g, " ");
     const posts = await Post.find({
       category: { $regex: "^" + category + "$", $options: "i" },
-      region: region,
-      country: country,
+      region: {
+        $regex: "^" + region + "$",
+        $options: "i",
+      },
+      country: {
+        $regex: "^" + country + "$",
+        $options: "i",
+      },
       status: "published",
     }).sort({ createdAt: -1 });
     res.render("search", {

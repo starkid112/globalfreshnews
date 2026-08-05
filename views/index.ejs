@@ -112,9 +112,6 @@
 <!-- ✅ NAVBAR -->
 <nav class="navbar">
 
-    <!-- MENU BUTTON -->
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
     <!-- SIDE MENU -->
     <div class="side-menu" id="sideMenu">
 
@@ -124,9 +121,11 @@
         </div>
 
         <a href="/">Home</a>
+
         <div class="dropdown">
-    <a href="#">Global ▾</a>
-    <div class="dropdown-menu">
+            <a href="#">Global ▾</a>
+
+        <div class="dropdown-menu">
         <!-- AFRICA -->
         <div class="dropdown-submenu">
             <a href="/global/Africa">Africa ▸</a>
@@ -267,8 +266,9 @@
                 <a href="/global/Oceania/Tonga">Tonga</a>
             </div>
         </div>
-    </div>
-</div>
+        </div>
+
+        </div>
 
         <a href="/category/Politics">Politics</a>
         <a href="/category/Health">Health</a>
@@ -290,20 +290,47 @@
         <a href="/sports/Hockey">Hockey</a>
         <a href="/sports/Olympics">Olympics</a>
         <a href="/sports/Motorsport">Motorsport</a>
+
     </div>
-
-    <!-- LEFT SIDE -->
-    <div class="nav-left">
-        <a href="/">
-            <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
-        </a>
+    <!-- END SIDE MENU -->
 
 
-        <div class="nav-links">
-            <a href="/">Home</a>
-    <div class="dropdown">
-    <a href="#">Global ▾</a>
-    <div class="dropdown-menu">
+    <!-- TOP BAR -->
+    <div class="navbar-top">
+
+        <!-- MENU BUTTON -->
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <!-- LOGO -->
+        <div class="nav-left">
+            <a href="/">
+                <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+            </a>
+        </div>
+
+        <!-- SEARCH + DARK -->
+        <div class="nav-right">
+            <form action="/search" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Search news..." required>
+                <button type="submit">🔍</button>
+            </form>
+
+            <button onclick="toggleDark()" class="dark-btn">🌙</button>
+        </div>
+
+    </div>
+    <!-- END TOP BAR -->
+
+
+    <!-- DESKTOP / MOBILE HORIZONTAL MENU -->
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <div class="dropdown">
+            <a href="#">Global ▾</a>
+
+            <div class="dropdown-menu">
         <!-- AFRICA -->
         <div class="dropdown-submenu">
             <a href="/global/Africa">Africa ▸</a>
@@ -445,47 +472,38 @@
             </div>
         </div>
     </div>
-</div>
 
-            <a href="/category/Politics">Politics</a>
-            <a href="/category/Health">Health</a>
-           <a href="/category/Markets">Markets</a>
-            <a href="/category/Tech">Tech</a>
-            <a href="/category/Entertainment">Entertainment</a>
-            <a href="/category/Business">Business</a>
-            <a href="/category/Lifestyle">Lifestyle</a>
-            <a href="/category/Education">Education</a>
-
-            <!-- SPORTS DROPDOWN -->
-            <div class="dropdown">
-                <a href="#">Sports ▾</a>
-                <div class="dropdown-menu">
-                    <a href="/sports/Football">Football</a>
-                    <a href="/sports/Tennis">Tennis</a>
-                    <a href="/sports/Basketball">Basketball</a>
-                    <a href="/sports/Golf">Golf</a>
-                    <a href="/sports/Boxing">Boxing</a>
-                    <a href="/sports/Cricket">Cricket</a>
-                    <a href="/sports/Rugby">Rugby</a>
-                    <a href="/sports/Baseball">Baseball</a>
-                    <a href="/sports/Hockey">Hockey</a>
-                    <a href="/sports/Olympics">Olympics</a>
-                    <a href="/sports/Motosport">Motosport</a>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="nav-right">
-        <form action="/search" method="GET" class="search-box">
-            <input type="text" name="q" placeholder="Search news..." required>
-            <button type="submit">🔍</button>
-        </form>
-    </div>
+        <a href="/category/Politics">Politics</a>
+        <a href="/category/Health">Health</a>
+        <a href="/category/Markets">Markets</a>
+        <a href="/category/Tech">Tech</a>
+        <a href="/category/Entertainment">Entertainment</a>
+        <a href="/category/Business">Business</a>
+        <a href="/category/Lifestyle">Lifestyle</a>
+        <a href="/category/Education">Education</a>
 
-    <!-- DARK MODE -->
-    <button onclick="toggleDark()" class="dark-btn">🌙</button>
+        <div class="dropdown">
+            <a href="#">Sports ▾</a>
+
+            <div class="dropdown-menu">
+                <a href="/sports/Football">Football</a>
+                <a href="/sports/Tennis">Tennis</a>
+                <a href="/sports/Basketball">Basketball</a>
+                <a href="/sports/Golf">Golf</a>
+                <a href="/sports/Boxing">Boxing</a>
+                <a href="/sports/Cricket">Cricket</a>
+                <a href="/sports/Rugby">Rugby</a>
+                <a href="/sports/Baseball">Baseball</a>
+                <a href="/sports/Hockey">Hockey</a>
+                <a href="/sports/Olympics">Olympics</a>
+                <a href="/sports/Motorsport">Motorsport</a>
+            </div>
+
+        </div>
+
+    </div>
 
 </nav>
 
@@ -547,9 +565,15 @@ async>
 <!-- TOP TRENDS -->
 <% if (sliderNews && sliderNews.length) { %>
 <section class="happening-now">
-<h2 class="section-title">
-Top Trends
-</h2>
+
+<div class="section-header">
+    <h2 class="section-title">Top Trends</h2>
+    <div class="slider-buttons">
+        <button class="trend-prev">&#10094;</button>
+        <button class="trend-next">&#10095;</button>
+    </div>
+</div>
+
 <div class="happening-slider">
 <% sliderNews.forEach(post => { %>
 <a
@@ -608,6 +632,7 @@ Global Fresh News
 
             <!-- BIG SLIDER -->
             <div class="hero-slider">
+              <button class="hero-prev">&#10094;</button>
                 <% if (bigFeatures && bigFeatures.length > 0) { %>
                     <% bigFeatures.forEach((post, index) => { %>
                         <div class="slide <%= index === 0 ? 'active' : '' %>">
@@ -621,6 +646,7 @@ Global Fresh News
                         </div>
                     <% }) %>
                 <% } %>
+                <button class="hero-next">&#10095;</button>
             </div>
 
             <!-- SMALL FEATURES -->
@@ -1082,6 +1108,11 @@ if(ad){
     <div>
       <h3>Company</h3>
       <a href="/about">About Us</a>
+      <a href="/author">About the Author</a>
+      <a href="/editorial-team">Editorial Team</a>
+      <a href="/editorial-policy">Editorial Policy</a>
+      <a href="/corrections-policy">Corrections Policy</a>
+      <a href="/fact-checking-policy">Fact-Checking Policy</a>
       <a href="/page/terms">Terms of Use</a>
       <a href="/contact">Contact Us</a>
       <a href="/privacy">Privacy Policy</a>
@@ -1130,17 +1161,61 @@ if(ad){
 <div class="skeleton"></div>
 <div class="skeleton"></div>
 
+<script>
+const trendSlider = document.querySelector(".happening-slider");
+const nextTrend = document.querySelector(".trend-next");
+const prevTrend = document.querySelector(".trend-prev");
+if(trendSlider){
+    nextTrend.addEventListener("click",()=>{
+        trendSlider.scrollBy({
+            left:350,
+            behavior:"smooth"
+        });
+    });
+    prevTrend.addEventListener("click",()=>{
+        trendSlider.scrollBy({
+            left:-350,
+            behavior:"smooth"
+        });
+    });
+}
+</script>
+
 <!-- HERO AUTO SLIDE -->
 <script>
-let slides = document.querySelectorAll(".slide");
+const slides = document.querySelectorAll(".slide");
+const prevBtn = document.querySelector(".hero-prev");
+const nextBtn = document.querySelector(".hero-next");
 let current = 0;
-
-setInterval(() => {
-    if(slides.length === 0) return;
+function showSlide(index){
     slides[current].classList.remove("active");
-    current = (current + 1) % slides.length;
+    current = index;
+    if(current >= slides.length){
+        current = 0;
+    }
+    if(current < 0){
+        current = slides.length - 1;
+    }
     slides[current].classList.add("active");
-}, 4000);
+}
+let autoSlide = setInterval(() => {
+    if(slides.length === 0) return;
+    showSlide(current + 1);
+},4000);
+nextBtn.addEventListener("click", () => {
+    clearInterval(autoSlide);
+    showSlide(current + 1);
+    autoSlide = setInterval(() => {
+        showSlide(current + 1);
+    },4000);
+});
+prevBtn.addEventListener("click", () => {
+    clearInterval(autoSlide);
+    showSlide(current - 1);
+    autoSlide = setInterval(() => {
+        showSlide(current + 1);
+    },4000);
+});
 </script>
 
 <!-- DARK MODE -->

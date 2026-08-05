@@ -12,17 +12,26 @@
 </head>
 <body>
 
-<!-- ✅ NAVBAR -->
+<!-- ✅ ADMIN NAVBAR -->
 <nav class="navbar">
-    <div class="nav-left">
-        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
-        <span class="logo">Global Fresh News</span>
+
+    <div class="navbar-top">
+
+        <!-- LEFT -->
+        <div class="nav-left">
+            <a href="/">
+                <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+            </a>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="nav-right">
+            <a href="/" class="admin-link">View Site</a>
+            <a href="/logout" class="admin-link">Logout</a>
+        </div>
+
     </div>
 
-    <div class="nav-right">
-        <a href="/">View Site</a>
-        <a href="/logout">Logout</a>
-    </div>
 </nav>
 
 <div class="login-container">

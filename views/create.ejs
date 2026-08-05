@@ -16,26 +16,24 @@
 </head>  
 <body>  
   
-<!-- ✅ NAVBAR -->  
-<nav class="navbar">  
-    <div class="nav-left">  
-        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
-        <div class="nav-links">  
-            <a href="/">Home</a>  
-            <a href="/category/Global">Global</a>  
-            <a href="/category/Markets">Markets</a>  
-            <a href="/category/Sports">Sports</a>  
-            <a href="/category/Tech">Tech</a>  
-            <a href="/category/Entertainment">Entertainment</a>
-            <a href="/category/Business">Business</a>
-        </div>  
-    </div>  
+<nav class="navbar">
 
-    <div class="nav-right">  
-        <a href="/admin">Dashboard</a>  
-        <a href="/logout">Logout</a>  
-    </div>  
-</nav>  
+    <div class="navbar-top">
+
+        <div class="nav-left">
+            <a href="/">
+                <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <a href="/admin" class="admin-link">Dashboard</a>
+            <a href="/logout" class="admin-link">Logout</a>
+        </div>
+
+    </div>
+
+</nav>
   
 <!-- ✅ HEADER -->  
 <div class="page-header">  

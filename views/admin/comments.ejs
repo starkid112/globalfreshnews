@@ -14,14 +14,22 @@
 <body>
 
 <nav class="navbar">
-    <div class="nav-left">
-        <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+
+    <div class="navbar-top">
+
+        <div class="nav-left">
+            <a href="/">
+                <img src="/uploads/<%= setting.logo || 'logo.png' %>" class="logo-img">
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <a href="/admin" class="admin-link">Dashboard</a>
+            <a href="/logout" class="admin-link">Logout</a>
+        </div>
+
     </div>
 
-    <div class="nav-right">
-        <a href="/admin">Dashboard</a>
-        <a href="/logout">Logout</a>
-    </div>
 </nav>
 <div class="admin-container">
 
