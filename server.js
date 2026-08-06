@@ -777,7 +777,7 @@ app.use(async (req, res, next) => {
   }
 });
 
-app.get("/admin/ads/edit/:id", checkAuth, async (req, res) => {
+app.get("/admin/ads/tedi/:id", checkAuth, async (req, res) => {
   try {
     const ad = await Ad.findById(req.params.id);
     res.render("admin/edit-ad", {

@@ -1743,12 +1743,12 @@ body.dark .contact-form {
     }
 }
 
-@media(max-width: 768px){
+/* @media(max-width: 768px){
     .navbar {
         flex-direction: row;
         align-items: center ;
 }
-}
+} */
 
 /* CREATE */
 .form-box {
@@ -2498,9 +2498,15 @@ body.dark .page-header, .about-content {
         display:block;
     }
 
+    .navbar{
+       overflow: visible !important;
+   }
+
+
     .navbar-top{
         height: 35px;
         padding:8px 10px;
+        overflow: visible !important;
     }
 
     /* LOGO */
@@ -2553,8 +2559,7 @@ body.dark .page-header, .about-content {
         justify-content:flex-start;
         align-items:center;
         gap:14px;
-        overflow-x:auto;
-        overflow-y:visible;
+        overflow: visible;
         white-space:nowrap;
         scrollbar-width:none;
         -webkit-overflow-scrolling:touch;
@@ -2599,9 +2604,9 @@ body.dark .page-header, .about-content {
         display:none;
 }
 
-   .nav-links .dropdown.active > .dropdown-menu{
-        display:block;
-    }
+  .nav-links .dropdown.active > .dropdown-menu{
+    display:block;
+}
 
     /* SIDE MENU */
 
@@ -2609,24 +2614,6 @@ body.dark .page-header, .about-content {
         width:280px;
         left:-300px;
     }
-
-/* ================= DESKTOP ================= */
-
-@media (min-width:769px){
-
-    .navbar{
-        display:block;
-    }
-
-    .menu-btn{
-        display:block;
-    }
-
-    .nav-links{
-        overflow:visible;
-    }
-
-}
 
 .ticker-content {
     display: inline-block;
@@ -2879,3 +2866,26 @@ body.dark .page-header, .about-content {
   .footer {
     text-align: center;
   }
+
+  /* ================= DESKTOP ================= */
+
+@media (min-width:769px){
+
+    .navbar{
+        display:block;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .nav-links{
+        overflow:visible;
+    }
+
+    .nav-links .dropdown:hover > .dropdown-menu{
+        display:block;
+    }
+
+
+}
