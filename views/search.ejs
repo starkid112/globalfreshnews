@@ -238,14 +238,15 @@
 
 
     <!-- DESKTOP / MOBILE HORIZONTAL MENU -->
+    <div class="nav-scroll"> 
     <div class="nav-links">
 
         <a href="/">Home</a>
 
-        <div class="dropdown">
+      <div class="dropdown">
             <a href="#">Global ▾</a>
 
-            <div class="dropdown-menu">
+        <div class="dropdown-menu">
         <!-- AFRICA -->
         <div class="dropdown-submenu">
             <a href="/global/Africa">Africa ▸</a>
@@ -388,7 +389,7 @@
         </div>
     </div>
 
-        </div>
+  </div>
 
         <a href="/category/Politics">Politics</a>
         <a href="/category/Health">Health</a>
@@ -418,6 +419,7 @@
 
         </div>
 
+    </div>
     </div>
 
 </nav>
@@ -633,5 +635,275 @@ function closeMenu() {
   document.querySelector(".side-menu").classList.remove("active");
 }
 </script>
+
+<!-- MOBILE NAVBAR DROPDOWN -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (window.innerWidth <= 768) {
+
+        document.querySelectorAll(".nav-links > .dropdown > a").forEach(function (link) {
+
+            link.addEventListener("click", function (e) {
+
+                e.preventDefault();
+
+                const dropdown = this.parentElement;
+
+                let menu = dropdown.querySelector(":scope > .dropdown-menu");
+
+                /* ================= CLOSE CURRENT ================= */
+
+                if (dropdown.classList.contains("active")) {
+
+                    menu = document.querySelector(
+                        '.mobile-floating-dropdown[data-owner="' +
+                        dropdown.dataset.dropdownId +
+                        '"]'
+                    );
+
+                    if (menu) {
+
+                        menu.classList.remove("mobile-floating-dropdown");
+
+                        menu.style.position = "";
+                        menu.style.left = "";
+                        menu.style.top = "";
+                        menu.style.display = "";
+                        menu.style.zIndex = "";
+
+                        dropdown.appendChild(menu);
+                    }
+
+                    dropdown.classList.remove("active");
+
+                    return;
+                }
+
+                /* ================= CLOSE OTHER DROPDOWNS ================= */
+
+                document.querySelectorAll(".nav-links > .dropdown.active").forEach(function (other) {
+
+                    const otherId = other.dataset.dropdownId;
+
+                    const otherMenu = document.querySelector(
+                        '.mobile-floating-dropdown[data-owner="' +
+                        otherId +
+                        '"]'
+                    );
+
+                    if (otherMenu) {
+
+                        otherMenu.classList.remove("mobile-floating-dropdown");
+
+                        otherMenu.style.position = "";
+                        otherMenu.style.left = "";
+                        otherMenu.style.top = "";
+                        otherMenu.style.display = "";
+                        otherMenu.style.zIndex = "";
+
+                        other.appendChild(otherMenu);
+                    }
+
+                    other.classList.remove("active");
+
+                });
+
+                /* ================= CREATE ID ================= */
+
+                if (!dropdown.dataset.dropdownId) {
+
+                    dropdown.dataset.dropdownId =
+                        "dropdown-" +
+                        Math.random().toString(36).substring(2, 10);
+                }
+
+                const dropdownId = dropdown.dataset.dropdownId;
+
+                /* ================= GET MENU ================= */
+
+                menu = dropdown.querySelector(":scope > .dropdown-menu");
+
+                if (!menu) return;
+
+                /* ================= POSITION ================= */
+
+                const rect = link.getBoundingClientRect();
+
+                /* MOVE MENU OUTSIDE SCROLL CONTAINER */
+
+                document.body.appendChild(menu);
+
+                menu.classList.add("mobile-floating-dropdown");
+
+                menu.dataset.owner = dropdownId;
+
+                menu.style.left = rect.left + "px";
+                menu.style.top = rect.bottom + "px";
+
+                dropdown.classList.add("active");
+
+            });
+
+        });
+
+       // ================= MOBILE SUBMENU POSITIONING =================
+
+document.addEventListener("click", function (e) {
+
+    if (window.innerWidth > 768) return;
+
+    const submenuLink = e.target.closest(
+        ".mobile-floating-dropdown .dropdown-submenu > a"
+    );
+
+    if (!submenuLink) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const submenu = submenuLink.parentElement.querySelector(
+        ":scope > .dropdown-submenu-content"
+    );
+
+    if (!submenu) return;
+
+    // CLOSE OTHER SUBMENUS
+    document.querySelectorAll(
+        ".mobile-floating-dropdown .dropdown-submenu-content"
+    ).forEach(function (item) {
+
+        if (item !== submenu) {
+            item.style.display = "none";
+            item.classList.remove("mobile-submenu-open");
+        }
+
+    });
+
+    // CLOSE CURRENT SUBMENU
+    if (submenu.classList.contains("mobile-submenu-open")) {
+
+        submenu.classList.remove("mobile-submenu-open");
+        submenu.style.display = "none";
+
+        return;
+    }
+
+    // OPEN CURRENT SUBMENU
+    submenu.classList.add("mobile-submenu-open");
+
+    const mainMenu = submenu.closest(".mobile-floating-dropdown");
+
+    const submenuWidth = 220;
+    const gap = 3;
+
+    /*
+     * FIRST:
+     * Make sure the main dropdown + submenu
+     * can fit beside each other.
+     */
+
+    const mainMenuRect = mainMenu.getBoundingClientRect();
+
+    let mainLeft = mainMenuRect.left;
+
+    const totalWidth = mainMenuRect.width + submenuWidth + gap;
+
+    if (mainLeft + totalWidth > window.innerWidth) {
+
+        mainLeft = window.innerWidth - totalWidth - 5;
+
+    }
+
+    if (mainLeft < 5) {
+        mainLeft = 5;
+    }
+
+    // Move the MAIN dropdown slightly left if necessary
+    mainMenu.style.left = mainLeft + "px";
+
+    /*
+     * GET UPDATED MAIN MENU POSITION
+     */
+
+    const updatedMenuRect = mainMenu.getBoundingClientRect();
+
+    /*
+     * SUBMENU OPENS TO THE RIGHT
+     */
+
+    let left = updatedMenuRect.right + gap;
+    let top = submenuLink.getBoundingClientRect().top;
+
+    /*
+     * KEEP SUBMENU INSIDE THE SCREEN
+     */
+
+    if (left + submenuWidth > window.innerWidth) {
+        left = window.innerWidth - submenuWidth - 5;
+    }
+
+    if (left < 5) {
+        left = 5;
+    }
+
+    /*
+     * VERTICAL POSITION
+     */
+
+    const maxHeight = window.innerHeight * 0.70;
+
+    if (top + maxHeight > window.innerHeight) {
+        top = window.innerHeight - maxHeight - 5;
+    }
+
+    if (top < 5) {
+        top = 5;
+    }
+
+    /*
+     * APPLY SUBMENU POSITION
+     */
+
+    submenu.style.display = "block";
+    submenu.style.position = "fixed";
+    submenu.style.left = left + "px";
+    submenu.style.top = top + "px";
+    submenu.style.width = submenuWidth + "px";
+    submenu.style.maxHeight = "70vh";
+    submenu.style.overflowY = "auto";
+    submenu.style.zIndex = "10000001";
+
+});
+
+    // ================= KEEP SPORTS VISIBLE =================
+
+document.querySelectorAll(".nav-links > .dropdown > a").forEach(function (link) {
+
+    if (link.textContent.includes("Sports")) {
+
+        link.addEventListener("click", function () {
+
+            if (window.innerWidth <= 768) {
+
+                this.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "center"
+                });
+
+            }
+
+        });
+
+    }
+
+});
+
+    }
+
+});
+</script>
+
 </body>
 </html>

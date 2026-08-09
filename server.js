@@ -845,6 +845,19 @@ app.post("/admin/ads/toggle/:id", checkAuth, async (req, res) => {
   }
 });
 
+// DELETE AD
+app.post("/admin/ads/delete/:id", checkAuth, async (req, res) => {
+  try {
+    await Ad.findByIdAndDelete(req.params.id);
+
+    res.redirect("/admin/ads");
+
+  } catch (err) {
+    console.error("DELETE AD ERROR:", err);
+    res.redirect("/admin/ads");
+  }
+});
+
 app.get("/ad-click/:id", async (req, res) => {
   const ad = await Ad.findById(req.params.id);
 
