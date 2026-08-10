@@ -2571,6 +2571,7 @@ body.dark .page-header, .about-content {
         -webkit-overflow-scrolling:touch;
         scrollbar-width:none;
         position: relative;
+        isolation: isolate;
     }
 
     .nav-scroll::-webkit-scrollbar{
